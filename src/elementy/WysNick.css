@@ -1,0 +1,48 @@
+div#WysNick{
+    text-align: center;
+    padding: 50px;
+    background-color: rgb(79, 79, 79);
+    display: inline-block;
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%,50%);
+    transition: 0.2s;
+}
+
+input#WysNick,button#WysNick{
+    font-size: 50px;
+    margin: 5px;
+}
+
+h1#WysNick{
+    position: absolute;
+    top: -5%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    color: white;
+    font-size: 120px;
+    padding: 0px;
+    width: 100%;
+    
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;  
+    user-select: none;
+}
+h1#WysNick:active{
+    color: rgb(186, 186, 186);
+}
+
+span#WysNick{
+    opacity: 40%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 30px;
+}
+
+div#przerwa{
+    margin-bottom: 170px;
+}

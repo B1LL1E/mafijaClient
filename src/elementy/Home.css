@@ -1,0 +1,38 @@
+span#wysz{
+    text-align: center;
+    font-size: 50px;
+
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;  
+    user-select: none;
+}
+
+input#wysz{
+    font-size: 50px;
+    font-family: Courier;
+    text-align: center;
+    width: 300px;
+    margin: 10px;
+}
+
+div#wysz{display: flex;}
+div#wyszRight,div#wyszLeft{
+    width: 45%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+div#wyszMid{
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 10%;
+    font-size: 70%;
+    
+}
+
+button#wysz{
+    font-size: 50px;
+    font-family: Courier;
+    margin: 10px;
+}
