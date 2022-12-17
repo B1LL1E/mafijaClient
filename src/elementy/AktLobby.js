@@ -19,7 +19,7 @@ export default function AktLobby() {
     }, []);
 
     useEffect(() => {
-        socket.on('odpowiedz', (data) => {
+        socket.on('odpo', (data) => {
             setWia(data);
         });
     }, [socket]);
