@@ -3,90 +3,44 @@ import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import WysNick from './elementy/WysNick';
 import Home from './elementy/Home';
+import { Route, Routes } from 'react-router-dom';
+import Guest from './elementy/Guest';
+import Host from './elementy/Host';
+import RozgrywkaHost from './elementy/RozgrywkaHost';
 import Losowanie from './elementy/Losowanie';
-import AktLobby from './elementy/AktLobby';
-import { Link, Route, Routes } from 'react-router-dom';
+
 
 const socket = io.connect('http://localhost:3001');
 
-
 function App() {
 
+
+  //kodDolaczenia
   const [mojNick,setMojNick] = useState('');
-
-  const [wiadomosci, setWiadomosci] = useState('');
-  const [wiadomosc1, setWiadomosc1] = useState('');
-  const [wia, setWia] = useState('');
-  const wyslijWiadomosc = () => {
-    socket.emit('wysWia', wia, wysRoom);
-    setWiadomosc1(wia);
-  };
-
-  useEffect(() => {
-    socket.on('odpowiedz', (data) => {
-      setWiadomosci(data);
-    }); 
-  }, [socket]);
-
-
   const [room, setRoom] = useState('');
-  const [wysRoom, setWysRoom] = useState('');
-  const dolacz = () => {
-    setWysRoom(room);
-    socket.emit('dolacz', room); 
-  }
+  const [gracze,setGracze] = useState([]);
 
-  // let dolaczono = false;
-  // const stworzLobby = () => {
-  //   let kodlobby = Losowanie();   
-  //   dolaczono = true;
-  //   alert(dolaczono)
-  //}
-    
+  const [kodGry, setKodGry] = useState('');
+  useEffect(() => {
+    setKodGry(Losowanie());
+  }, [])
 
-  return (
-    <div id='App'>
-      
-      
-      
+  return(
 
-      {/* <h1 id=''>DZIALA</h1>
-      <h1>{wiadomosci}</h1>
+      <Routes>
+        <Route index element={
+          <>
+            <WysNick mojNick={mojNick} setMojNick={setMojNick} />
+            <Home  room={room} setRoom={setRoom}/>
+          </>
+        } />
 
-      <input type='text' value={wia} onChange={(e) => setWia(e.target.value)}/>
-      <button onClick={wyslijWiadomosc}>wyslij wiadomosc</button>
-      <br/><br/>
-
-      
-      <div id='dolaczDoRoom'>
-        <h1> twój pokój to: {wysRoom}</h1>
-        <input type='text' value={room} onChange={(e) => setRoom(e.target.value)} placeholder='IdPokoju' required/>
-        <button onClick={dolacz}>dołacz</button>
-      </div> 
-      
-      <h1>{wiadomosc1}</h1>
-      
-      */}
-
-
-
-        <Routes>
-          <Route index element={
-            <>
-              <WysNick mojNick={mojNick} setMojNick={setMojNick} />
-              <Home/>
-            </>
-          }/>
-
-          <Route path='joined' element={<AktLobby/>}/>
-          
-        </Routes>
- 
-        
-
-      
-    </div>
-  );
+        <Route path='HostLobby'     element={<Host  mojNick={mojNick} room={kodGry}                 gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
+        <Route path='GuestLobby'    element={<Guest mojNick={mojNick} room={room} setRoom={setRoom} gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
+        <Route path='RozgrywkaHost' element={<RozgrywkaHost                                         gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
+      </Routes>
+  
+  )
 }
 
 export default App;

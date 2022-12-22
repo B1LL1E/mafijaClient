@@ -1,0 +1,33 @@
+div#kodLobby{
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%,0);
+    font-size: 50px;
+}
+
+div#start{
+    position: absolute;
+    bottom: 4%;
+    left: 4%;
+    
+}
+
+button#start{
+    font-size: 80px;
+}
+
+
+/* lista graczy */
+div#jedenGracz{
+    border: 5px solid black;
+    width: 500px;
+    font-size: 50px;    
+    margin-bottom: 5px;
+}
+
+div#ListaGraczy{
+    position: absolute;
+    top: 10%;
+    right: 1%;
+}

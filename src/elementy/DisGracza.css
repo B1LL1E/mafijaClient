@@ -1,0 +1,13 @@
+div#DisGracza{
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+    background-color: #a3ffff;
+    height: 300px;
+    width: 500px;
+    border-radius: 25px;
+    padding: 5px;
+
+    transition: 0.2s;
+    opacity: 0%;
+}
