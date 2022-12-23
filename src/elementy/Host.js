@@ -40,7 +40,7 @@ export default function Host(props) {
     }, [props.socket]);
 
     props.socket.on('usun', (id) => {
-        const nowaLista = gracze.filter(gracz => gracz.id !== id);
+        let nowaLista = gracze.filter(gracz => gracz.id !== id.id);
         setGracze(nowaLista);
         props.setGracze(nowaLista);
     });

@@ -35,28 +35,30 @@ export default function Guest(props) {
     useEffect(() => {
         let nrGracz = 0;
         gracze.map((ele) => {
+            nrGracz++;
             if(nrGracz === 1){
                 hostID = ele.id;
+                console.log(hostID);
                 hostNICK = ele.nick;
             }
         })
     }, [gracze]);
   
-    const [usuGracz, setUsuGracz] = useState('');
+    const [usuGracz, setUsunGracz] = useState('');
+    let usuGraczID = '';
     const [wysDisGracza, setWysDisGracza] = useState('NIE');
-    props.socket.on('usun', (id) => {
-        setUsuGracz(id.nick);    
-        setTimeout(() => {
-            window.location.reload();
-        }, 5000);
-    });
-    useEffect(() => {
-        if(usuGracz !== ''){
+    props.socket.on('usun', (gracz) => {
+        setUsunGracz(gracz.nick); 
+        usuGraczID = gracz.id;
+        console.log(usuGraczID);
+        console.log(hostID);
+        if(usuGraczID === hostID){
             setWysDisGracza('TAK');
-        }
-    }, [usuGracz]);
-
-
+            setTimeout(() => {
+                window.location.reload();
+            }, 4000)
+        }  
+    });
     
 
     return(
