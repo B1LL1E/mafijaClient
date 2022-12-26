@@ -8,6 +8,7 @@ import Guest from './elementy/Guest';
 import Host from './elementy/Host';
 import RozgrywkaHost from './elementy/RozgrywkaHost';
 import Losowanie from './elementy/Losowanie';
+import Rozgrywka from './elementy/Rozgrywka';
 
 
 const socket = io.connect('http://localhost:3001');
@@ -37,7 +38,8 @@ function App() {
 
         <Route path='HostLobby'     element={<Host  mojNick={mojNick} room={kodGry}                 gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
         <Route path='GuestLobby'    element={<Guest mojNick={mojNick} room={room} setRoom={setRoom} gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
-        <Route path='RozgrywkaHost' element={<RozgrywkaHost                                         gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
+        <Route path='RozgrywkaHost' element={<RozgrywkaHost mojNick={mojNick}  room={kodGry}        gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
+        <Route path='Rozgrywka'     element={<Rozgrywka mojNick={mojNick}      room={room}        gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
       </Routes>
   
   )

@@ -1,11 +1,13 @@
 import React ,{ useEffect, useState } from "react";
 import './Guest.css';
 import DisGracza from "./DisGracza";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function Guest(props) {
     
+    const navigate = useNavigate();
+
     //lista graczy
     const [gracze, setGracze] = useState([]);
 
@@ -22,11 +24,11 @@ export default function Guest(props) {
     //pobieranie listy graczy
     props.socket.on('listaOdp', (players) => {
         setGracze(players); 
+        props.setGracze(players);
         console.log([players]);
     });   
 
     
-
 
 
     //dissconnect hosta
@@ -44,6 +46,7 @@ export default function Guest(props) {
         })
     }, [gracze]);
   
+    //sprawdza czy host jest aktywny
     const [usuGracz, setUsunGracz] = useState('');
     let usuGraczID = '';
     const [wysDisGracza, setWysDisGracza] = useState('NIE');
@@ -60,6 +63,12 @@ export default function Guest(props) {
         }  
     });
     
+
+    props.socket.on('startGryOdp', () => {
+        setTimeout(() => {
+            navigate("/Rozgrywka");
+        }, 2000)
+    })
 
     return(
         <>

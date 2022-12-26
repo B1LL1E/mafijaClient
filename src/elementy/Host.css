@@ -10,7 +10,6 @@ div#start{
     position: absolute;
     bottom: 4%;
     left: 4%;
-    
 }
 
 button#start{
@@ -30,4 +29,8 @@ div#ListaGraczy{
     position: absolute;
     top: 10%;
     right: 1%;
+}
+
+h1#mojNick{
+    color: white;
 }

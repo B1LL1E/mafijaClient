@@ -1,9 +1,6 @@
 import React ,{ useEffect, useState } from "react";
 import './Host.css'
 import { useNavigate } from "react-router-dom";
-import Losowanie from "./Losowanie";
-
-
 
 export default function Host(props) {
     const navigate = useNavigate();
@@ -23,8 +20,8 @@ export default function Host(props) {
 
     useEffect(() => {
         props.socket.emit('lista', props.room, {gracze});
-        console.log('wyslalem');
-        console.log({gracze});
+        // console.log('wyslalem');
+        // console.log({gracze});
     }, [gracze]);
     
 
@@ -39,6 +36,7 @@ export default function Host(props) {
         
     }, [props.socket]);
 
+    //sprawdza i usuwa graczy
     props.socket.on('usun', (id) => {
         let nowaLista = gracze.filter(gracz => gracz.id !== id.id);
         setGracze(nowaLista);
@@ -48,6 +46,7 @@ export default function Host(props) {
 
     //start
     const startGame = () => {
+        props.socket.emit('startGry', props.room);
         setTimeout(() => {
             console.log('start');
             navigate("/RozgrywkaHost");

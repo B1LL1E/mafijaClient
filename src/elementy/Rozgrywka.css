@@ -1,0 +1,184 @@
+
+
+div#kolo{
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    
+
+    height: 80vh;
+    width: 80vw;
+    background-color: rgb(39, 39, 39);
+    color: white;
+    border-radius: 50%;
+
+    transform-style: preserve-3d;
+    transform: translate(-50%, -50%) rotateX(50deg);
+}
+
+
+/* gracze */
+div#graczNr1,div#graczNr2,div#graczNr3,div#graczNr4,div#graczNr5,div#graczNr6,div#graczNr7,div#graczNr8{
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(calc( calc(var(--rot) - 1) * 45deg));
+    font-size: 5vh;
+    padding: 4vh;
+    transition: 0.15s;
+
+    transform-style: preserve-3d;
+
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;  
+    user-select: none;
+
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border-radius: 25px;
+}
+div#graczNr1:hover,div#graczNr2:hover,div#graczNr3:hover,div#graczNr4:hover,div#graczNr5:hover,div#graczNr6:hover,div#graczNr7:hover,div#graczNr8:hover{
+    border: solid 5px red ;
+    transform: translate(-50%, -50%) translateZ(50px) rotateX(-40deg);
+}
+div#koloNick:active{
+    background-color: rgb(96, 96, 96);
+    transition: 0.05s;
+}
+
+.graczNr1{ top: 15%; left: 50%;}
+.graczNr2{ top: 30%; left: 75%;}
+.graczNr3{ top: 50%; left: 85%;}
+.graczNr4{ top: 70%; left: 75%;}
+.graczNr5{ top: 90%; left: 50%;}
+.graczNr6{ top: 70%; left: 25%;}
+.graczNr7{ top: 50%; left: 15%;}
+.graczNr8{ top: 30%; left: 25%;}
+
+.graczNrGlosy1{top: 15%; left: 50%;}
+.graczNrGlosy2{top: 30%; left: 75%;}
+.graczNrGlosy3{top: 50%; left: 85%;}
+.graczNrGlosy4{top: 70%; left: 75%;}
+.graczNrGlosy5{top: 90%; left: 50%;}
+.graczNrGlosy6{top: 70%; left: 25%;}
+.graczNrGlosy7{top: 50%; left: 15%;}
+.graczNrGlosy8{top: 30%; left: 25%;}
+
+div#mojeGlosy{
+    position: absolute; 
+    color: black;
+    transform: translate(-50%, -50%) rotateX(-40deg) translateZ(70vh);
+    background-color: #ffffff;
+    font-size: 5vh;
+
+    padding: 1vh;
+    border-radius: 10%;
+
+    opacity: 50%;
+}
+
+
+/* wybrany gracz */
+div#selectedGracz{
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(calc( calc(var(--rot) - 1) * 45deg));
+    font-size: 5vh;
+    padding: 4vh;
+    transition: 0.15s;
+
+    transform-style: preserve-3d;
+
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;  
+    user-select: none;
+
+    background-color: black;
+    color: white;
+    border-radius: 25px;
+}
+
+div#selectedGracz:hover{
+    border: solid 5px red ;
+    transform: translate(-50%, -50%) translateZ(50px) rotateX(-40deg);
+}
+
+
+
+/* potwierdzenie */
+div#potwierdzenie{
+    position: absolute;
+    top: 10%;
+    left: 10%;
+
+    background-color: rgb(37, 37, 37);
+    color: white;
+    border-radius: 25px;
+
+    display: none;
+    opacity: 0%;
+    transition: 0.1s;
+}
+div#potwierdzenie1{
+    font-size: 8vh;
+    padding: 1ex;
+    display: flex;
+}
+div#potNapis1,div#potNapis2{
+    padding-left: 2ex;
+    padding-right: 2ex;
+    border-radius: 25px;
+
+    transition: 0.1s;
+}
+div#potNapis1:hover{
+    color: #3cff00;
+    background-color: rgb(40, 63, 39);
+}
+div#potNapis2:hover{
+    color: rgb(240, 0, 0);
+    background-color: rgb(65, 31, 31);
+}
+
+div#wybrany{
+    font-size: 6vh;
+    padding-top: 10%;
+    margin: -3vh;
+}
+
+
+
+/* blokada */
+div#blokada{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    opacity: 0%;
+    border-radius: 50%;
+    transition: 0.1s;
+
+    height: 60vh;
+    width: 90vw;
+    background-color: rgb(255, 255, 255);
+
+    display: none;
+
+}
+div#blokada1{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10vh;
+}
+
+
+/* liczba glosow */
+div#liczbaGlosow{
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    transform: translate(-50%, -50%);
+
+    font-size: 10vh;
+}
