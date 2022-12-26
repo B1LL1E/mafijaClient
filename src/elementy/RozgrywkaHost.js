@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import ListaKlas from "./ListaKlas";
-import Rozgrywka from "./Rozgrywka";
 import './Rozgrywka.css';
+
 
 export default function RozgrywkaHost(props) {
 
@@ -129,32 +128,33 @@ export default function RozgrywkaHost(props) {
             }
             props.socket.emit('liczbaGlosow', mojawartosc, props.room);
             setGlosyGracze(mojawartosc);
-        }, 2000);
+        }, 100);
     }, [])
     
     
 
     
-
     //nowyGlos
-    props.socket.on('GlosOdp', (nowyGlos) => {
-        console.log('mam');
+    props.socket.off('GlosOdp').on('GlosOdp', (nowyGlos) => {
+        // console.log(props.socket.id);
+        // console.log('mam');
         setLiczbaGlosow(liczbaGlosow + 1);
 
         let wartosc = glosyGracze;
 
         for(let x = 0; x < iloGra; x++){
+            // console.log('tutaj');
+            // console.log(wartosc[x].id);
             if(wartosc[x].id === nowyGlos){
                 wartosc[x] = {id: nowyGlos, glosy: wartosc[x].glosy + 1};
 
-                props.socket.emit('liczbaGlosow', wartosc, props.room);
                 console.log('wyslalem nowe glosy');
-
-                setGlosyGracze(wartosc);
                 console.log(wartosc[x]);
-            }
-            
+
+                setGlosyGracze(wartosc);   
+            }         
         }
+        props.socket.emit('liczbaGlosow', wartosc, props.room);
     });
     useEffect(() => {
         props.socket.emit('iloscGlosujacych', liczbaGlosow, props.room);
@@ -173,18 +173,19 @@ export default function RozgrywkaHost(props) {
         let wartosc = glosyGracze;
 
         for(let x = 0; x < iloGra; x++){
-            console.log(wartosc[0].id);
-            console.log(selectGracz);
+            // console.log(wartosc[0].id);
+            // console.log(selectGracz);
             if(wartosc[x].id === selectGracz){
                 wartosc[x] = {id: selectGracz, glosy: wartosc[x].glosy + 1};
 
-                props.socket.emit('liczbaGlosow', wartosc, props.room);
+                props.socket.emit('liczbaGlosow', wartosc, props.room); 
                 console.log('wyslalem nowe glosy');
 
                 setGlosyGracze(wartosc);
                 console.log(wartosc[x]);
             }
-        }  
+        } 
+        
     }
 
 
@@ -207,6 +208,18 @@ export default function RozgrywkaHost(props) {
         }
     }, [wysBlokada])
 
+
+
+    //disconnect
+
+
+
+    //sprawdzenie czy wszyscy gracze zaglosowali
+    // useEffect(() => {
+    //     if(liczbaGlosow === iloGra){
+
+    //     }
+    // }, [liczbaGlosow])
 
     return(
         <>
@@ -264,6 +277,8 @@ export default function RozgrywkaHost(props) {
             <div id='noc'>
                 NOC
             </div>
+
+            
             
         </>
     )

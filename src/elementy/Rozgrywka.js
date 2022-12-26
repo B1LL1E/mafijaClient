@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import './Rozgrywka.css';
+import DisGracza from "./DisGracza";
+import './DisGracza.css';
 
 export default function Rozgrywka(props) {
 
@@ -77,7 +79,8 @@ export default function Rozgrywka(props) {
 
     //liczba glosow
     const [liczbaGlosow, setLiczbaGlosow] = useState(0);
-    const [glosyGracze, setGlosyGracze] = useState([]);
+    let iloGra = props.gracze.length;
+    const [glosyGracze, setGlosyGracze] = useState(new Array(iloGra).fill({id: 'puste', glosy: 0}));
     //obieranie glosow
     props.socket.on('liczbaGlosowOdp', (glosy) => {
         setGlosyGracze(glosy);
@@ -109,6 +112,7 @@ export default function Rozgrywka(props) {
         setWysBlokada('TAK');
         let pokoj = props.room;
         props.socket.emit('Glos', selectGracz, pokoj);
+        console.log('wyslij glos na ' + selectGracz);
     }
     
 
@@ -129,6 +133,46 @@ export default function Rozgrywka(props) {
             }, 100)
         }
     }, [wysBlokada])
+
+
+
+
+
+    //dissconnect hosta
+    let hostID = '';
+    let hostNICK = '';
+    useEffect(() => {
+        let nrGracz = 0;
+        props.gracze.map((ele) => {
+            nrGracz++;
+            if(nrGracz === 1){
+                hostID = ele.id;
+                console.log(hostID);
+                hostNICK = ele.nick;
+            }
+        })
+    }, [props.gracze]);
+    //sprawdza czy host jest aktywny
+    const [usuGracz, setUsunGracz] = useState('');
+    let usuGraczID = '';
+    const [wysDisGracza, setWysDisGracza] = useState('NIE');
+    props.socket.on('usun', (gracz) => {
+        setUsunGracz(gracz.nick); 
+        usuGraczID = gracz.id;
+        // console.log(usuGraczID);
+        // console.log(hostID);
+        if(usuGraczID === hostID){
+            setWysDisGracza('TAK');
+            setTimeout(() => {
+                window.location.reload();
+            }, 4000)
+        }  
+    });
+
+
+
+
+
 
     return(
         <>
@@ -179,6 +223,8 @@ export default function Rozgrywka(props) {
                     🔒
                 </div>
             </div>
+
+            <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/>
             
         </>
     )

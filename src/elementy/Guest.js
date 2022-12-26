@@ -53,8 +53,8 @@ export default function Guest(props) {
     props.socket.on('usun', (gracz) => {
         setUsunGracz(gracz.nick); 
         usuGraczID = gracz.id;
-        console.log(usuGraczID);
-        console.log(hostID);
+        // console.log(usuGraczID);
+        // console.log(hostID);
         if(usuGraczID === hostID){
             setWysDisGracza('TAK');
             setTimeout(() => {
