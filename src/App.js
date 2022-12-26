@@ -11,7 +11,8 @@ import Losowanie from './elementy/Losowanie';
 import Rozgrywka from './elementy/Rozgrywka';
 
 
-const socket = io.connect('http://localhost:3001');
+const socket = io.connect(process.env.REACT_APP_STRONA_SERVERA);
+
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
   const [kodGry, setKodGry] = useState('');
   useEffect(() => {
     setKodGry(Losowanie());
+    console.log(process.env.REACT_APP_STRONA_SERVERA);
   }, [])
 
   return(
