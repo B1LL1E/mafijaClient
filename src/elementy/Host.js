@@ -11,6 +11,7 @@ export default function Host(props) {
     }, [])
 
     const [gracze, setGracze] = useState([{id: props.socket.id ,room: props.room, nick: props.mojNick}]);
+    
 
     //tworzy lobby
     useEffect(() => {
@@ -50,6 +51,7 @@ export default function Host(props) {
         setTimeout(() => {
             console.log('start');
             navigate("/RozgrywkaHost");
+            props.setListOfPlayers(gracze);
         }, 2000);
     }
     

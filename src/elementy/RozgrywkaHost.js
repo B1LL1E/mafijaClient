@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import './Rozgrywka.css';
+import KickGracz from "./KickGracz";
 
+import DisGracza from "./DisGracza";
+import './DisGracza.css';
 
 export default function RozgrywkaHost(props) {
 
@@ -34,6 +37,9 @@ export default function RozgrywkaHost(props) {
     const [twojaKlasa, setTwojaKlasa] = useState('');
     useEffect(() => {
         losowanieKlass();
+
+        console.log('list of players');
+        console.log(props.listOfPlayers);
     }, [])
 
     let nrGracza = 0;
@@ -210,16 +216,63 @@ export default function RozgrywkaHost(props) {
 
 
 
-    //disconnect
-
-
-
+    
+    const [wyrzucony, setWyrzucony] = useState('');
     //sprawdzenie czy wszyscy gracze zaglosowali
-    // useEffect(() => {
-    //     if(liczbaGlosow === iloGra){
+    useEffect(() => {
+        let glosy1 = {id: 'puste', glosy: 0};
+        let glosy2 = {id: 'puste', glosy: 0};
+        let glosy3 = {id: 'puste', glosy: 0};
 
-    //     }
-    // }, [liczbaGlosow])
+        if(liczbaGlosow === iloGra){
+            console.log('wszyscy zaglosowali');
+            for(let x = 0; x < glosyGracze.length; x++){
+                if(glosyGracze[x].glosy > glosy1.glosy){
+                    glosy1 = {id: glosyGracze[x].id, glosy: glosyGracze[x].glosy}
+                }
+                else if(glosyGracze[x].glosy === glosy1.glosy){
+                    glosy2 = {id: glosyGracze[x].id, glosy: glosyGracze[x].glosy}
+                }
+                else if(glosyGracze[x].glosy === glosy2.glosy){
+                    glosy3 = {id: glosyGracze[x].id, glosy: glosyGracze[x].glosy}
+                    break;
+                }
+            }
+            console.log('najwicej glosow ma')
+            console.log(glosy1);
+            console.log(glosy2);
+            console.log(glosy3);
+
+
+            //wyrzucanie graczy
+            if(glosy1.glosy > glosy2.glosy){
+                console.log('wyglosowano gracza ' + glosy1.id);
+                for(let x = 0; x < props.gracze.length; x++){
+
+                }
+                props.setGracze(KickGracz(props.gracze, glosy1))
+            }
+
+            if(glosy1.glosy === glosy2.glosy){
+                console.log('liczba glosw jest rowna');
+                
+            }
+
+            if(glosy1.glosy === glosy2.glosy && glosy2.glosy === glosy3.glosy){
+                console.log('pass glosowania');
+            }
+        }
+    }, [liczbaGlosow])
+    useEffect(() => {
+        
+    }, [props.gracze]);
+
+
+    //wyrzucenie gracza
+    
+
+
+    //wyrzucenie gracza
 
     return(
         <>

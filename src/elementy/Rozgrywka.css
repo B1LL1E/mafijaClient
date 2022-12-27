@@ -154,12 +154,12 @@ div#blokada{
     left: 50%;
     transform: translate(-50%, 0);
     opacity: 0%;
-    border-radius: 50%;
+    border-radius: 0%;
     transition: 0.1s;
 
     height: 60vh;
     width: 90vw;
-    background-color: rgb(255, 255, 255);
+    
 
     display: none;
 
@@ -169,7 +169,8 @@ div#blokada1{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 10vh;
+    font-size: 20vh;
+    opacity: 30%;
 }
 
 

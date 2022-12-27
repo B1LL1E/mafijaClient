@@ -21,6 +21,7 @@ function App() {
   const [mojNick,setMojNick] = useState('');
   const [room, setRoom] = useState('');
   const [gracze,setGracze] = useState([]);
+  const [listOfPlayers, setListOfPlayers] = useState([]);
 
   const [kodGry, setKodGry] = useState('');
   useEffect(() => {
@@ -38,10 +39,48 @@ function App() {
           </>
         } />
 
-        <Route path='HostLobby'     element={<Host  mojNick={mojNick} room={kodGry}                 gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
-        <Route path='GuestLobby'    element={<Guest mojNick={mojNick} room={room} setRoom={setRoom} gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
-        <Route path='RozgrywkaHost' element={<RozgrywkaHost mojNick={mojNick}  room={kodGry}        gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
-        <Route path='Rozgrywka'     element={<Rozgrywka mojNick={mojNick}      room={room}        gracze={gracze} setGracze={setGracze} socket={socket}/>}/>
+        <Route path='HostLobby' element={<Host  
+          mojNick={mojNick} 
+          room={kodGry}
+          gracze={gracze} 
+          setGracze={setGracze} 
+          socket={socket}
+
+          listOfPlayers={listOfPlayers}
+          setListOfPlayers={setListOfPlayers}
+
+        />}/>
+
+        <Route path='GuestLobby' element={<Guest 
+          mojNick={mojNick} 
+          room={room} 
+          setRoom={setRoom} 
+          gracze={gracze} 
+          setGracze={setGracze} 
+          socket={socket}
+        
+        />}/>
+
+        <Route path='RozgrywkaHost' element={<RozgrywkaHost
+          mojNick={mojNick}  
+          room={kodGry}        
+          gracze={gracze} 
+          setGracze={setGracze} 
+          socket={socket}
+
+          listOfPlayers={listOfPlayers}
+          
+        />}/>
+
+        <Route path='Rozgrywka' element={<Rozgrywka 
+        mojNick={mojNick}      
+        room={room}          
+        gracze={gracze} 
+        setGracze={setGracze} 
+        socket={socket}
+        
+      />}/>
+
       </Routes>
   
   )
