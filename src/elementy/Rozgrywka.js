@@ -83,7 +83,7 @@ export default function Rozgrywka(props) {
     const [glosyGracze, setGlosyGracze] = useState(new Array(iloGra).fill({id: 'puste', glosy: 0}));
     //obieranie glosow
     props.socket.on('liczbaGlosowOdp', (glosy) => {
-        setGlosyGracze(glosy);
+        setGlosyGracze([...glosy]);
         console.log(glosy);
     });
     //setLiczbaGlosow(licGlo);
@@ -151,7 +151,7 @@ export default function Rozgrywka(props) {
                 hostNICK = ele.nick;
             }
         })
-    }, [props.gracze]);
+    }, []);
     //sprawdza czy host jest aktywny
     const [usuGracz, setUsunGracz] = useState('');
     let usuGraczID = '';
@@ -170,7 +170,30 @@ export default function Rozgrywka(props) {
     });
 
 
+    
 
+
+    //usuwa gracza z glosowania
+    props.socket.on('wyrzuconoOdp', (glosy1) => {
+        let wartosc = props.gracze;
+        for(let x = 0; x < wartosc.length; x++){
+            if(wartosc[x].id === glosy1.id){
+                wartosc.splice(x, 1);
+            }
+        }
+
+        props.setGracze([...wartosc]);
+
+
+        let mojawartosc = glosyGracze; 
+        for(let x = 0; x < mojawartosc.length; x++){
+            if(mojawartosc[x].id === glosy1.id){
+                mojawartosc.splice(x, 1);
+            }
+        } 
+
+        setGlosyGracze([...mojawartosc]);
+    });
 
 
 

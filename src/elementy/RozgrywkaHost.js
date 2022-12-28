@@ -7,12 +7,14 @@ import './DisGracza.css';
 
 export default function RozgrywkaHost(props) {
 
+    const [gracze ,setGracze] = useState(props.gracze);
+
     //losowanie klas
     const losowanieKlass = () => {
         
         let klasy = ['Ochroniarz', 'Policja', 'Debil', 'Haker'];
 
-        let iloscGraczy = props.gracze.length;
+        let iloscGraczy = gracze.length;
         // console.log(iloscGraczy);
         let iloscKlas = klasy.length;
         let nrKlasy = 0;
@@ -26,7 +28,7 @@ export default function RozgrywkaHost(props) {
         for(let i = 1; i < iloscGraczy; i++){
             iloscKlas = klasy.length;
             nrKlasy = Math.floor(Math.random() * iloscKlas);   
-            props.socket.emit('twojaRola', props.gracze[i].id, klasy[nrKlasy]);
+            props.socket.emit('twojaRola', gracze[i].id, klasy[nrKlasy]);
             klasy = klasy.filter((ele) => ele !== klasy[nrKlasy]);
             // console.log(klasy);
         }    
@@ -115,8 +117,7 @@ export default function RozgrywkaHost(props) {
 
 
 
-    let iloGra = props.gracze.length;
-    // let mojeID = props.gracze[0].id;
+    let iloGra = gracze.length;
     const [glosyGracze, setGlosyGracze] = useState(new Array(iloGra).fill({id: 'puste', glosy: 0}));
  
 
@@ -127,13 +128,13 @@ export default function RozgrywkaHost(props) {
         setTimeout(() => {
             let mojawartosc = [...glosyGracze];     
             // console.log(glosyGracze);
-            // console.log(props.gracze[0].id);
+            // console.log(gracze[0].id);
             for(let x = 0; x < iloGra; x++){
-                mojawartosc[x] = {id: props.gracze[x].id, glosy: 0} ;
-                // console.log(props.gracze[x].id);
+                mojawartosc[x] = {id: gracze[x].id, glosy: 0} ;
+                // console.log(gracze[x].id);
             }
             props.socket.emit('liczbaGlosow', mojawartosc, props.room);
-            setGlosyGracze(mojawartosc);
+            setGlosyGracze([...mojawartosc]);
         }, 100);
     }, [])
     
@@ -157,7 +158,7 @@ export default function RozgrywkaHost(props) {
                 console.log('wyslalem nowe glosy');
                 console.log(wartosc[x]);
 
-                setGlosyGracze(wartosc);   
+                setGlosyGracze([...wartosc]);   
             }         
         }
         props.socket.emit('liczbaGlosow', wartosc, props.room);
@@ -187,7 +188,7 @@ export default function RozgrywkaHost(props) {
                 props.socket.emit('liczbaGlosow', wartosc, props.room); 
                 console.log('wyslalem nowe glosy');
 
-                setGlosyGracze(wartosc);
+                setGlosyGracze([...wartosc]);
                 console.log(wartosc[x]);
             }
         } 
@@ -247,25 +248,50 @@ export default function RozgrywkaHost(props) {
             //wyrzucanie graczy
             if(glosy1.glosy > glosy2.glosy){
                 console.log('wyglosowano gracza ' + glosy1.id);
-                for(let x = 0; x < props.gracze.length; x++){
+                console.log(glosyGracze);
 
+                //gracze
+                let wartosc = gracze;
+                for(let x = 0; x < wartosc.length; x++){
+                    if(wartosc[x].id === glosy1.id){
+                        wartosc.splice(x, 1);
+                    }
                 }
-                props.setGracze(KickGracz(props.gracze, glosy1))
+                setGracze([...wartosc]);
+
+                
+                //lista glosow
+                let mojawartosc = glosyGracze; 
+                for(let x = 0; x < mojawartosc.length; x++){
+                    if(mojawartosc[x].id === glosy1.id){
+                        mojawartosc.splice(x, 1);
+                    }
+                } 
+
+                setGlosyGracze([...mojawartosc]);
+                console.log(wartosc);
+                console.log(mojawartosc);
+                // setGlosyGracze(KickGracz(glosyGracze, glosy1));
+                props.socket.emit('wyrzucono', glosy1, props.room);
             }
 
             if(glosy1.glosy === glosy2.glosy){
-                console.log('liczba glosw jest rowna');
+                console.log('liczba glosw jest rowna z graczem ' + glosy1.id + ' oraz ' + glosy2.id);
                 
             }
 
             if(glosy1.glosy === glosy2.glosy && glosy2.glosy === glosy3.glosy){
                 console.log('pass glosowania');
             }
+
+            
         }
     }, [liczbaGlosow])
     useEffect(() => {
         
-    }, [props.gracze]);
+    }, [gracze]);
+    
+    
 
 
     //wyrzucenie gracza
@@ -274,6 +300,8 @@ export default function RozgrywkaHost(props) {
 
     //wyrzucenie gracza
 
+    const [ekranGracze, setEkranGracze] = useState();
+
     return(
         <>
             <h1>RozgrywkaHOST</h1>
@@ -281,16 +309,15 @@ export default function RozgrywkaHost(props) {
 
             <div id='grupa'>
                 <div id='kolo'>
-                    {
-                        props.gracze.map((gracz) => {
+                    {                  
+                        gracze.map((gracz) => {
                             nrGracza++;
                             return(    
                                 <>  
-                                    <div id={'graczNr' + nrGracza} className={'graczNr' + nrGracza} onClick={wybierz} style={{'--rot':nrGracza}} data-id={gracz.id} data-nick={gracz.nick} data-licGlo={0}>{gracz.nick}</div>
+                                    <div key={gracz.id}  id={'graczNr' + nrGracza} className={'graczNr' + nrGracza} onClick={wybierz} style={{'--rot':nrGracza}} data-id={gracz.id} data-nick={gracz.nick} data-licGlo={0}>{gracz.nick}</div>
                                 </> 
                             )
                         })
-                        
                     }
 
                     { 
