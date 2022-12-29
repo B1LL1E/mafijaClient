@@ -84,7 +84,7 @@ div#mojeGlosy{
 /* wybrany gracz */
 div#selectedGracz{
     position: absolute;
- /* transform: translate(-50%, -50%) rotate(calc( calc(var(--rot) - 1) * 45deg)); */
+    transform: translate(-50%, -50%) rotate(calc( calc(var(--rot) - 1) * 45deg));
     transform: translate(-50%, -50%) translateZ(50px) rotateX(-40deg);
     font-size: 5vh;
     padding: 4vh;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import './Rozgrywka.css';
-import KickGracz from "./KickGracz";
+import './Walec.css';
+import './css/wyrzuconyGracz.css';
 
 import DisGracza from "./DisGracza";
 import './DisGracza.css';
@@ -254,6 +255,9 @@ export default function RozgrywkaHost(props) {
                 let wartosc = gracze;
                 for(let x = 0; x < wartosc.length; x++){
                     if(wartosc[x].id === glosy1.id){
+                        console.log();
+                        setWyrzucony(wartosc[x].nick);
+                        document.getElementById('wyrzuconyGracz').style.opacity = '100%';
                         wartosc.splice(x, 1);
                     }
                 }
@@ -265,14 +269,37 @@ export default function RozgrywkaHost(props) {
                 for(let x = 0; x < mojawartosc.length; x++){
                     if(mojawartosc[x].id === glosy1.id){
                         mojawartosc.splice(x, 1);
+                        
                     }
                 } 
 
                 setGlosyGracze([...mojawartosc]);
                 console.log(wartosc);
                 console.log(mojawartosc);
-                // setGlosyGracze(KickGracz(glosyGracze, glosy1));
                 props.socket.emit('wyrzucono', glosy1, props.room);
+
+
+                // smierc, wlaniecie presą
+                setTimeout(() => {
+                    document.getElementById('walec').style.top = '50%';
+                    setTimeout(() => {
+                        setWyrzucony('');
+                        document.getElementById('wyrzuconyGracz').style.opacity = '0%';
+                        document.getElementById('graczNr2').classList.add = 'graczNr';
+                        setTimeout(() => {
+                            document.getElementById('graczNr1','graczNr2','graczNr3','graczNr4','graczNr5','graczNr6','graczNr7','graczNr8').classList.remove = 'graczNr';
+                        }, 5000);
+                    }, 50);
+
+                    
+                    
+                    setTimeout(() => {
+                        document.getElementById('walec').style.top = '-50%';
+                    },2000);
+                }, 1000)
+                
+                // 
+                
             }
 
             if(glosy1.glosy === glosy2.glosy){
@@ -287,9 +314,6 @@ export default function RozgrywkaHost(props) {
             
         }
     }, [liczbaGlosow])
-    useEffect(() => {
-        
-    }, [gracze]);
     
     
 
@@ -300,7 +324,6 @@ export default function RozgrywkaHost(props) {
 
     //wyrzucenie gracza
 
-    const [ekranGracze, setEkranGracze] = useState();
 
     return(
         <>
@@ -314,7 +337,7 @@ export default function RozgrywkaHost(props) {
                             nrGracza++;
                             return(    
                                 <>  
-                                    <div key={gracz.id}  id={'graczNr' + nrGracza} className={'graczNr' + nrGracza} onClick={wybierz} style={{'--rot':nrGracza}} data-id={gracz.id} data-nick={gracz.nick} data-licGlo={0}>{gracz.nick}</div>
+                                    <div key={gracz.id}  id={'graczNr' + nrGracza} className={'graczNr' + nrGracza}  onClick={wybierz} style={{'--rot':nrGracza}} data-id={gracz.id} data-nick={gracz.nick} data-licGlo={0}>{gracz.nick}</div>
                                 </> 
                             )
                         })
@@ -330,6 +353,8 @@ export default function RozgrywkaHost(props) {
                             )
                         })
                     }
+
+                    <div id='wyrzuconyGracz'>{wyrzucony}</div>
                 </div>
             </div>
 
@@ -356,6 +381,16 @@ export default function RozgrywkaHost(props) {
 
             <div id='noc'>
                 NOC
+            </div>
+
+
+            <div id='walec'>
+                <div id='walecSciana' style={{ '--x':1 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':2 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':3 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':4 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':5 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':6 }}><div id='walecImg'></div></div>
             </div>
 
             

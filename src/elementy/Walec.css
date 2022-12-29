@@ -1,0 +1,39 @@
+div#walec{
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform-style: preserve-3d;
+    transform: translate(0, 0) rotateX(-30deg) ;
+
+    /* transition-timing-function: linear; */
+    transition: 0.05s linear;    
+}
+
+div#walecSciana{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-style: preserve-3d;
+    transform: 
+    translate(-50%, -80%) 
+    rotateY(calc(var(--x) * 60deg)) 
+    translateZ(17.2vh) 
+
+    ;
+
+    height: 100vh;
+    width: 20vh;
+
+    background: linear-gradient(0deg, white 0%, #999999 100%);
+}
+
+div#walecImg{
+    width: 100%;
+    height: 12vh;
+
+    position: absolute;
+    bottom: 0;
+
+    background-image: url('zdjecia/prasa.png');
+    background-size: contain;
+}
