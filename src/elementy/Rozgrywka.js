@@ -24,7 +24,7 @@ export default function Rozgrywka(props) {
     const [selectedGraczNick, setSelectGraczNick] = useState('');
     const [starygracz, setStarygracz] = useState('')
     const [pierwszyRaz, setPierwszyRaz] = useState('TAK')
-    const [wysPowtwierdzenie, setWysPowtwierdzenie] = useState('');
+    const [wysPowtwierdzenie, setWysPowtwierdzenie] = useState('NIE');
     const wybierz = async (e) => {
         if(pierwszyRaz === 'TAK'){
             setPierwszyRaz('NIE');
@@ -132,6 +132,12 @@ export default function Rozgrywka(props) {
                 document.getElementById('blokada').style.opacity = '50%';
             }, 100)
         }
+        else{
+            document.getElementById('blokada').style.opacity = '0%';
+            setTimeout(() => {    
+                document.getElementById('blokada').style.display = 'none'; 
+            }, 100)
+        }
     }, [wysBlokada])
 
 
@@ -172,12 +178,14 @@ export default function Rozgrywka(props) {
 
     
 
-
+    const [wyrzucony, setWyrzucony] = useState('');
     //usuwa gracza z glosowania
     props.socket.on('wyrzuconoOdp', (glosy1) => {
-        let wartosc = props.gracze;
+        let wartosc = [...props.gracze];
         for(let x = 0; x < wartosc.length; x++){
             if(wartosc[x].id === glosy1.id){
+                setWyrzucony(wartosc[x].nick);
+                document.getElementById('wyrzuconyGracz').style.opacity = '100%';
                 wartosc.splice(x, 1);
             }
         }
@@ -185,7 +193,7 @@ export default function Rozgrywka(props) {
         props.setGracze([...wartosc]);
 
 
-        let mojawartosc = glosyGracze; 
+        let mojawartosc = [...glosyGracze]; 
         for(let x = 0; x < mojawartosc.length; x++){
             if(mojawartosc[x].id === glosy1.id){
                 mojawartosc.splice(x, 1);
@@ -193,6 +201,35 @@ export default function Rozgrywka(props) {
         } 
 
         setGlosyGracze([...mojawartosc]);
+
+        
+        //smierc presą
+        setTimeout(() => {
+            document.getElementById('walec').style.top = '50%';
+            document.getElementById('blokada1').style.opacity = '0%';
+            setTimeout(() => {
+                
+                document.getElementById('wyrzuconyGracz').style.opacity = '0%';
+                document.getElementById('graczNr2').classList.add = 'graczNr';
+                setTimeout(() => {
+                    document.getElementById('graczNr1','graczNr2','graczNr3','graczNr4','graczNr5','graczNr6','graczNr7','graczNr8').classList.remove = 'graczNr';
+                }, 5000);
+            }, 50);
+
+            
+            
+            setTimeout(() => {
+                document.getElementById('walec').style.top = '-50%';
+                setWysBlokada('NIE');
+                setTimeout(() => {
+                    document.getElementById('blokada1').style.opacity = '100%';
+                }, 3000)
+            },2000);
+        }, 1000)
+
+        document.getElementById('selectedGracz').id = starygracz;
+        setPierwszyRaz('TAK');
+        setLiczbaGlosow(0);
     });
 
 
@@ -225,6 +262,8 @@ export default function Rozgrywka(props) {
                             )
                         })
                     }
+
+                    <div id='wyrzuconyGracz'>{wyrzucony}</div>
                 </div>
             </div>
 
@@ -245,6 +284,15 @@ export default function Rozgrywka(props) {
                 <div id='blokada1'>
                     🔒
                 </div>
+            </div>
+
+            <div id='walec'>
+                <div id='walecSciana' style={{ '--x':1 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':2 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':3 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':4 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':5 }}><div id='walecImg'></div></div>
+                <div id='walecSciana' style={{ '--x':6 }}><div id='walecImg'></div></div>
             </div>
 
             <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/>

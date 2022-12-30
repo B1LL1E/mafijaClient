@@ -55,7 +55,7 @@ export default function RozgrywkaHost(props) {
     const [starygracz, setStarygracz] = useState('')
     const [pierwszyRaz, setPierwszyRaz] = useState('TAK')
     const [wysPowtwierdzenie, setWysPowtwierdzenie] = useState('');
-    const wybierz = async (e) => {
+    const wybierz = (e) => {
         if(pierwszyRaz === 'TAK'){
             setPierwszyRaz('NIE');
             setStarygracz(e.currentTarget.id);
@@ -214,11 +214,18 @@ export default function RozgrywkaHost(props) {
                 document.getElementById('blokada').style.opacity = '50%';
             }, 100)
         }
+        else{
+            document.getElementById('blokada').style.opacity = '0%';
+            setTimeout(() => {    
+                document.getElementById('blokada').style.display = 'none'; 
+            }, 100)
+        }
     }, [wysBlokada])
 
 
 
     
+
     const [wyrzucony, setWyrzucony] = useState('');
     //sprawdzenie czy wszyscy gracze zaglosowali
     useEffect(() => {
@@ -240,16 +247,16 @@ export default function RozgrywkaHost(props) {
                     break;
                 }
             }
-            console.log('najwicej glosow ma')
-            console.log(glosy1);
-            console.log(glosy2);
-            console.log(glosy3);
+            // console.log('najwicej glosow ma')
+            // console.log(glosy1);
+            // console.log(glosy2);
+            // console.log(glosy3);
 
 
             //wyrzucanie graczy
             if(glosy1.glosy > glosy2.glosy){
-                console.log('wyglosowano gracza ' + glosy1.id);
-                console.log(glosyGracze);
+                // console.log('wyglosowano gracza ' + glosy1.id);
+                // console.log(glosyGracze);
 
                 //gracze
                 let wartosc = gracze;
@@ -269,7 +276,6 @@ export default function RozgrywkaHost(props) {
                 for(let x = 0; x < mojawartosc.length; x++){
                     if(mojawartosc[x].id === glosy1.id){
                         mojawartosc.splice(x, 1);
-                        
                     }
                 } 
 
@@ -282,23 +288,28 @@ export default function RozgrywkaHost(props) {
                 // smierc, wlaniecie presą
                 setTimeout(() => {
                     document.getElementById('walec').style.top = '50%';
+                    document.getElementById('blokada1').style.opacity = '0%';
                     setTimeout(() => {
                         setWyrzucony('');
                         document.getElementById('wyrzuconyGracz').style.opacity = '0%';
-                        document.getElementById('graczNr2').classList.add = 'graczNr';
-                        setTimeout(() => {
-                            document.getElementById('graczNr1','graczNr2','graczNr3','graczNr4','graczNr5','graczNr6','graczNr7','graczNr8').classList.remove = 'graczNr';
-                        }, 5000);
+                        // document.getElementById('graczNr2').classList.add = 'graczNr';
+                        // setTimeout(() => {
+                        //     document.getElementById('graczNr1','graczNr2','graczNr3','graczNr4','graczNr5','graczNr6','graczNr7','graczNr8').classList.remove = 'graczNr';
+                        // }, 5000);
                     }, 50);
 
                     
                     
                     setTimeout(() => {
                         document.getElementById('walec').style.top = '-50%';
+                        setWysBlokada('NIE');
+                        setTimeout(() => {
+                            document.getElementById('blokada1').style.opacity = '100%';
+                        }, 3000)
                     },2000);
                 }, 1000)
                 
-                // 
+                 
                 
             }
 
@@ -311,7 +322,8 @@ export default function RozgrywkaHost(props) {
                 console.log('pass glosowania');
             }
 
-            
+            setPierwszyRaz('TAK');
+            setLiczbaGlosow(0);
         }
     }, [liczbaGlosow])
     
