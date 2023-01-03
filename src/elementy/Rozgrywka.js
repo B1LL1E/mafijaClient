@@ -5,13 +5,22 @@ import './DisGracza.css';
 
 export default function Rozgrywka(props) {
 
+    const [gracze, setGracze] = useState(props.gracze);
+
+    //twoje id
+    const [twojeID, setTwojeID] = useState('');
+    useEffect(() => {
+        setTwojeID(props.socket.id);
+        console.log(props.socket.id);
+    }, []);
+
 
     //odbieranie klasy
     const [twojaKlasa, setTwojaKlasa] = useState('');
     props.socket.on('twojaRolaOdp', (nazwaKlasy) => {
         console.log(nazwaKlasy);
         setTwojaKlasa(nazwaKlasy);
-    })
+    });
 
 
 
@@ -22,27 +31,33 @@ export default function Rozgrywka(props) {
     //wybieranie gracza
     const [selectGracz, setSelectGracz] = useState('');
     const [selectedGraczNick, setSelectGraczNick] = useState('');
-    const [starygracz, setStarygracz] = useState('')
+    const [staryGracz, setStarygracz] = useState('')
     const [pierwszyRaz, setPierwszyRaz] = useState('TAK')
     const [wysPowtwierdzenie, setWysPowtwierdzenie] = useState('NIE');
-    const wybierz = async (e) => {
+    const wybierz = (e) => {
+        console.log(wysPowtwierdzenie);
+        setWysPowtwierdzenie('TAK');
         if(pierwszyRaz === 'TAK'){
             setPierwszyRaz('NIE');
-            setStarygracz(e.currentTarget.id);
+            setStarygracz(e.target.id);
+            console.log(e.target.id);
+
             document.getElementById(e.currentTarget.id).id = 'selectedGracz';
             setSelectGracz(e.target.getAttribute('data-id'));
             setSelectGraczNick(e.target.getAttribute('data-nick'));
         }
         else{
-            document.getElementById('selectedGracz').id = starygracz;
-            setStarygracz(e.currentTarget.id);
+            document.getElementById('selectedGracz').id = staryGracz;
+            setStarygracz(e.target.id);
+            
+
             document.getElementById(e.currentTarget.id).id = 'selectedGracz';
             setSelectGracz(e.target.getAttribute('data-id')); 
             setSelectGraczNick(e.target.getAttribute('data-nick'));
         }
         
         setWysPowtwierdzenie('TAK');
-    }
+    };
 
 
 
@@ -64,7 +79,7 @@ export default function Rozgrywka(props) {
             setSelectGracz('');
             setPierwszyRaz('TAK');
             if(pierwszyRaz === 'NIE'){
-                document.getElementById('selectedGracz').id = starygracz;
+                document.getElementById('selectedGracz').id = staryGracz;
             }
         }
     }, [wysPowtwierdzenie])
@@ -79,7 +94,7 @@ export default function Rozgrywka(props) {
 
     //liczba glosow
     const [liczbaGlosow, setLiczbaGlosow] = useState(0);
-    let iloGra = props.gracze.length;
+    let iloGra = gracze.length;
     const [glosyGracze, setGlosyGracze] = useState(new Array(iloGra).fill({id: 'puste', glosy: 0}));
     //obieranie glosow
     props.socket.on('liczbaGlosowOdp', (glosy) => {
@@ -149,7 +164,7 @@ export default function Rozgrywka(props) {
     let hostNICK = '';
     useEffect(() => {
         let nrGracz = 0;
-        props.gracze.map((ele) => {
+        gracze.map((ele) => {
             nrGracz++;
             if(nrGracz === 1){
                 hostID = ele.id;
@@ -176,60 +191,64 @@ export default function Rozgrywka(props) {
     });
 
 
-    
 
-    const [wyrzucony, setWyrzucony] = useState('');
+
+
     //usuwa gracza z glosowania
-    props.socket.on('wyrzuconoOdp', (glosy1) => {
-        let wartosc = [...props.gracze];
+    let starygracz1 = staryGracz;
+    useEffect(() => {
+        starygracz1 = staryGracz
+    }, [staryGracz]);
+    const [wyrzucony, setWyrzucony] = useState(''); 
+    props.socket.off('wyrzuconoOdp').on('wyrzuconoOdp', (glosy1, gracze1, glosyGracze1) => {
+        
+        //console.log(staryGracz);
+        document.getElementById('selectedGracz').id = starygracz1;
+
+        setGracze([...gracze1]);
+        setGlosyGracze(glosyGracze1);
+
+        let wartosc = gracze
         for(let x = 0; x < wartosc.length; x++){
             if(wartosc[x].id === glosy1.id){
-                setWyrzucony(wartosc[x].nick);
+                setWyrzucony(gracze[x].nick);
                 document.getElementById('wyrzuconyGracz').style.opacity = '100%';
-                wartosc.splice(x, 1);
             }
         }
-
-        props.setGracze([...wartosc]);
-
-
-        let mojawartosc = [...glosyGracze]; 
-        for(let x = 0; x < mojawartosc.length; x++){
-            if(mojawartosc[x].id === glosy1.id){
-                mojawartosc.splice(x, 1);
-            }
-        } 
-
-        setGlosyGracze([...mojawartosc]);
 
         
         //smierc presą
         setTimeout(() => {
             document.getElementById('walec').style.top = '50%';
             document.getElementById('blokada1').style.opacity = '0%';
-            setTimeout(() => {
-                
+            setTimeout(() => {      
                 document.getElementById('wyrzuconyGracz').style.opacity = '0%';
-                document.getElementById('graczNr2').classList.add = 'graczNr';
-                setTimeout(() => {
-                    document.getElementById('graczNr1','graczNr2','graczNr3','graczNr4','graczNr5','graczNr6','graczNr7','graczNr8').classList.remove = 'graczNr';
-                }, 5000);
             }, 50);
 
             
             
             setTimeout(() => {
                 document.getElementById('walec').style.top = '-50%';
-                setWysBlokada('NIE');
-                setTimeout(() => {
-                    document.getElementById('blokada1').style.opacity = '100%';
-                }, 3000)
-            },2000);
-        }, 1000)
 
-        document.getElementById('selectedGracz').id = starygracz;
+
+                if(twojeID === glosy1.id){
+                    document.getElementById('kolo').style.opacity = '50%';
+                    document.getElementById('zgon').style.opacity = '100%';
+                }
+                else{
+                    setWysBlokada('NIE');
+                    setTimeout(() => {
+                        document.getElementById('blokada1').style.opacity = '100%';
+                    }, 3000)
+                }
+                
+            },2000);
+        }, 1500)
+
+        setWysPowtwierdzenie('NIE');
         setPierwszyRaz('TAK');
         setLiczbaGlosow(0);
+        
     });
 
 
@@ -237,16 +256,21 @@ export default function Rozgrywka(props) {
     return(
         <>
             <h1>Rozgrywka</h1>
-            <h1>{twojaKlasa}</h1>
+            
+            <div id='twojaKlasa'>
+                {twojaKlasa}
+                <div id='zgon'>✖</div>
+            </div>     
+            
 
             <div id='grupa'>
                 <div id='kolo'>
                     {
-                        props.gracze.map((gracz) => {
+                        gracze.map((gracz) => {
                             nrGracza++;
                             return(    
                                 <>
-                                    <div id={'graczNr' + nrGracza} className={'graczNr' + nrGracza} onClick={wybierz} style={{'--rot':nrGracza}} data-id={gracz.id} data-nick={gracz.nick}>{gracz.nick}</div>
+                                    <div key={'graczNr' + nrGracza} id={'graczNr' + nrGracza} className={'graczNr' + nrGracza} onClick={wybierz} style={{'--rot':nrGracza}} data-id={gracz.id} data-nick={gracz.nick}>{gracz.nick}</div>
                                 </>
                             )
                         })
@@ -280,11 +304,19 @@ export default function Rozgrywka(props) {
                 {liczbaGlosow}/{nrGracza}
             </div>
 
+
+
             <div id='blokada'>
                 <div id='blokada1'>
                     🔒
                 </div>
             </div>
+
+
+
+            
+
+
 
             <div id='walec'>
                 <div id='walecSciana' style={{ '--x':1 }}><div id='walecImg'></div></div>

@@ -10,6 +10,15 @@ export default function RozgrywkaHost(props) {
 
     const [gracze ,setGracze] = useState(props.gracze);
 
+
+    //twoje ID
+    const [twojeID, setTwojeID] = useState('');
+    useEffect(() => {
+        setTwojeID(props.socket.id);
+        console.log(props.socket.id);
+    }, []);
+
+
     //losowanie klas
     const losowanieKlass = () => {
         
@@ -54,14 +63,19 @@ export default function RozgrywkaHost(props) {
     const [selectedGraczNick, setSelectGraczNick] = useState('');
     const [starygracz, setStarygracz] = useState('')
     const [pierwszyRaz, setPierwszyRaz] = useState('TAK')
-    const [wysPowtwierdzenie, setWysPowtwierdzenie] = useState('');
+    const [wysPowtwierdzenie, setWysPowtwierdzenie] = useState('NIE');
     const wybierz = (e) => {
+        console.log('WYBIERZ');
+        console.log(wysPowtwierdzenie);
+        setWysPowtwierdzenie('TAK');
         if(pierwszyRaz === 'TAK'){
             setPierwszyRaz('NIE');
             setStarygracz(e.currentTarget.id);
             document.getElementById(e.currentTarget.id).id = 'selectedGracz';
             setSelectGracz(e.target.getAttribute('data-id'));
             setSelectGraczNick(e.target.getAttribute('data-nick'));
+
+            console.log('dziala');
         }
         else{
             document.getElementById('selectedGracz').id = starygracz;
@@ -69,9 +83,10 @@ export default function RozgrywkaHost(props) {
             document.getElementById(e.currentTarget.id).id = 'selectedGracz';
             setSelectGracz(e.target.getAttribute('data-id')); 
             setSelectGraczNick(e.target.getAttribute('data-nick'));
-        }
-        
-        setWysPowtwierdzenie('TAK');
+
+            console.log('nie dziala');
+        }  
+        console.log('---');  
     }
     // useEffect(() => {
     //     console.log(selectGracz);
@@ -82,6 +97,7 @@ export default function RozgrywkaHost(props) {
      
     //wyswietla przycisk potwierdzenia
     useEffect(() => {   
+        console.log('WYSPOTW')
         if(wysPowtwierdzenie === 'TAK'){
             document.getElementById('potwierdzenie').style.display = 'inline-block';
             setTimeout(() => {
@@ -274,6 +290,7 @@ export default function RozgrywkaHost(props) {
                 //lista glosow
                 let mojawartosc = glosyGracze; 
                 for(let x = 0; x < mojawartosc.length; x++){
+                    mojawartosc[x].glosy = 0;
                     if(mojawartosc[x].id === glosy1.id){
                         mojawartosc.splice(x, 1);
                     }
@@ -282,7 +299,7 @@ export default function RozgrywkaHost(props) {
                 setGlosyGracze([...mojawartosc]);
                 console.log(wartosc);
                 console.log(mojawartosc);
-                props.socket.emit('wyrzucono', glosy1, props.room);
+                
 
 
                 // smierc, wlaniecie presą
@@ -302,14 +319,25 @@ export default function RozgrywkaHost(props) {
                     
                     setTimeout(() => {
                         document.getElementById('walec').style.top = '-50%';
-                        setWysBlokada('NIE');
-                        setTimeout(() => {
-                            document.getElementById('blokada1').style.opacity = '100%';
-                        }, 3000)
+                        
+                        
+                        if(twojeID === glosy1.id){
+                            document.getElementById('kolo').style.opacity = '50%';
+                            document.getElementById('zgon').style.opacity = '100%';
+                        }
+                        else{
+                            setWysBlokada('NIE');
+                            setTimeout(() => {
+                                document.getElementById('blokada1').style.opacity = '100%';
+                            }, 3000)
+                        }
                     },2000);
-                }, 1000)
+                }, 1500)
+
                 
-                 
+
+                //                             glosy1, room, gracze, GlosyGracze
+                props.socket.emit('wyrzucono', glosy1, props.room, wartosc, mojawartosc)
                 
             }
 
@@ -322,6 +350,7 @@ export default function RozgrywkaHost(props) {
                 console.log('pass glosowania');
             }
 
+            setWysPowtwierdzenie('NIE');
             setPierwszyRaz('TAK');
             setLiczbaGlosow(0);
         }
@@ -330,17 +359,17 @@ export default function RozgrywkaHost(props) {
     
 
 
-    //wyrzucenie gracza
     
-
-
-    //wyrzucenie gracza
 
 
     return(
         <>
             <h1>RozgrywkaHOST</h1>
-            <h1>{twojaKlasa}</h1>
+            
+            <div id='twojaKlasa'>
+                {twojaKlasa}
+                <div id='zgon'>✖</div>
+            </div> 
 
             <div id='grupa'>
                 <div id='kolo'>

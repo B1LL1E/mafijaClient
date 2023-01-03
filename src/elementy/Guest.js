@@ -77,11 +77,11 @@ export default function Guest(props) {
                 
                 <div id='kodLobby'>KOD<br/><b>{props.room}</b></div>
                     
-                <div id='ListaGraczy'>
+                <div  id='ListaGraczy'>
                     {
                         gracze.map((ele) => {
                             return(
-                                <div id='jedenGracz'>{ele.nick}</div>
+                                <div key={ele.id} id='jedenGracz'>{ele.nick}</div>
                             )
                         })
                     }
