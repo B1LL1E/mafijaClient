@@ -6,7 +6,7 @@ div#walec{
     transform: translate(0, 0) rotateX(-30deg) ;
 
     /* transition-timing-function: linear; */
-    transition: 0.05s linear;    
+    transition: 0.2s ease-in;    
 }
 
 div#walecSciana{

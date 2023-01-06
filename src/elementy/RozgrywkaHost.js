@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import './Rozgrywka.css';
 import './Walec.css';
 import './css/wyrzuconyGracz.css';
@@ -48,7 +48,9 @@ export default function RozgrywkaHost(props) {
     //rozpoczaencie losowania
     const [twojaKlasa, setTwojaKlasa] = useState('');
     useEffect(() => {
-        losowanieKlass();
+        setTimeout(() => {
+            losowanieKlass();
+        }, 2000);
 
         console.log('list of players');
         console.log(props.listOfPlayers);
@@ -322,7 +324,7 @@ export default function RozgrywkaHost(props) {
                         
                         
                         if(twojeID === glosy1.id){
-                            document.getElementById('kolo').style.opacity = '50%';
+                            // document.getElementById('kolo').style.opacity = '50%';
                             document.getElementById('zgon').style.opacity = '100%';
                         }
                         else{
@@ -332,13 +334,13 @@ export default function RozgrywkaHost(props) {
                             }, 3000)
                         }
                     },2000);
+
+
+                    
                 }, 1500)
 
-                
-
-                //                             glosy1, room, gracze, GlosyGracze
-                props.socket.emit('wyrzucono', glosy1, props.room, wartosc, mojawartosc)
-                
+                //                             glosy1, room,       gracze,   GlosyGracze
+                props.socket.emit('wyrzucono', glosy1, props.room, wartosc, mojawartosc) 
             }
 
             if(glosy1.glosy === glosy2.glosy){
@@ -372,6 +374,7 @@ export default function RozgrywkaHost(props) {
             </div> 
 
             <div id='grupa'>
+                <div id='koloBack'></div> 
                 <div id='kolo'>
                     {                  
                         gracze.map((gracz) => {
@@ -396,8 +399,12 @@ export default function RozgrywkaHost(props) {
                     }
 
                     <div id='wyrzuconyGracz'>{wyrzucony}</div>
-                </div>
+                    
+                </div>  
+
+                  
             </div>
+            
 
             <div id='potwierdzenie'>
                 <div id='wybrany'>{selectedGraczNick}</div>

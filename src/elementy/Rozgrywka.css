@@ -1,19 +1,58 @@
 
+@keyframes koloAnimacja {
+    0%{
+        transform: translate(-50%, -50%) rotateX(90deg) ;
+        top: 70%;
+        left: 50%;
+        position: absolute;
+    }
 
-div#kolo{
+    100%{
+        transform: translate(-50%, -50%) rotateX(50deg) ;
+        top: 70%;
+        left: 50%;
+        position: absolute;
+    }
+}
+
+div#grupa{
     position: absolute;
     top: 70%;
     left: 50%;
-    
+}
 
+div#kolo{
     height: 80vh;
     width: 80vw;
-    background-color: rgb(39, 39, 39);
+    /* background-color: rgb(39, 39, 39); */
+    
+    
     color: white;
     border-radius: 50%;
 
     transform-style: preserve-3d;
     transform: translate(-50%, -50%) rotateX(50deg);
+
+    animation: koloAnimacja 2s;  
+}
+div#koloBack{
+    height: 85vh;
+    width: 95vw;
+    background-color: rgb(79, 79, 79);
+
+    color: white;
+    border-radius: 50%;
+
+    transform-style: preserve-3d;
+    transform: translate(-50%, -50%) rotateX(50deg);
+
+    animation: koloAnimacja 2s; 
+
+    position: absolute;
+    top: 0%;
+    left: 0%;
+
+    filter: blur(20px);
 }
 
 
@@ -67,6 +106,7 @@ div#koloNick:active{
 .graczNrGlosy7{top: 50%; left: 10%;}
 .graczNrGlosy8{top: 30%; left: 25%;}
 
+
 div#mojeGlosy{
     position: absolute; 
     color: black;
@@ -79,6 +119,7 @@ div#mojeGlosy{
 
     opacity: 50%;
     transform-style: preserve-3d;
+
 }
 
 
@@ -210,10 +251,22 @@ div#zgon{
 
 
 /* klasa klasy */
+@keyframes twojaKlasaAnim {
+    0%{
+        opacity: 0%;
+    }
+
+    100%{
+        opacity: 100%;
+    }
+}
+
 div#twojaKlasa{
     font-size: 10vh;
     position: absolute;
     top: 10vh;
     left: 20vw;
     transform: translate(-50%,-40%);
+
+    opacity: 100%;
 }

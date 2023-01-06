@@ -189,12 +189,18 @@ export default function Rozgrywka(props) {
             }, 4000)
         }  
     });
-
+    useEffect(() => {
+        if(wysDisGracza === 'TAK'){
+            document.getElementById('DisGracza').style.opacity = '100%';
+            document.getElementById('DisGracza').style.display = 'block';
+        } 
+    }, [wysDisGracza])
 
 
 
 
     //usuwa gracza z glosowania
+    const [jaZyje, setJaZyje] = useState('TAK');
     let starygracz1 = staryGracz;
     useEffect(() => {
         starygracz1 = staryGracz
@@ -203,7 +209,9 @@ export default function Rozgrywka(props) {
     props.socket.off('wyrzuconoOdp').on('wyrzuconoOdp', (glosy1, gracze1, glosyGracze1) => {
         
         //console.log(staryGracz);
-        document.getElementById('selectedGracz').id = starygracz1;
+        if(jaZyje === 'TAK'){
+            document.getElementById('selectedGracz').id = starygracz1;
+        } 
 
         setGracze([...gracze1]);
         setGlosyGracze(glosyGracze1);
@@ -232,8 +240,9 @@ export default function Rozgrywka(props) {
 
 
                 if(twojeID === glosy1.id){
-                    document.getElementById('kolo').style.opacity = '50%';
+                    // document.getElementById('kolo').style.opacity = '50%';
                     document.getElementById('zgon').style.opacity = '100%';
+                    setJaZyje('NIE');
                 }
                 else{
                     setWysBlokada('NIE');
@@ -248,7 +257,7 @@ export default function Rozgrywka(props) {
         setWysPowtwierdzenie('NIE');
         setPierwszyRaz('TAK');
         setLiczbaGlosow(0);
-        
+        console.log('wyrzucono' + glosy1.id);
     });
 
 
@@ -264,6 +273,7 @@ export default function Rozgrywka(props) {
             
 
             <div id='grupa'>
+                <div id='koloBack'></div> 
                 <div id='kolo'>
                     {
                         gracze.map((gracz) => {
@@ -327,7 +337,12 @@ export default function Rozgrywka(props) {
                 <div id='walecSciana' style={{ '--x':6 }}><div id='walecImg'></div></div>
             </div>
 
-            <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/>
+
+            <div id='DisGracza'>
+                <h1>HOST {props.usuGracz} się rozłaczył</h1>
+                <h1>Za moment zostaniewsz przeniesiony do lobby</h1>
+            </div>
+            {/* <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/> */}
             
         </>
     )
