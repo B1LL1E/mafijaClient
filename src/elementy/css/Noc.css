@@ -1,0 +1,14 @@
+div#noc{
+    background-color: black;
+    height: 200vh;
+    width: 200vw;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    opacity: 0%;
+
+    transition: 2s;
+    display: none;
+}

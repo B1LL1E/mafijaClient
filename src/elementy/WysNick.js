@@ -14,9 +14,11 @@ export default function WysNick(props) {
 
         if(wysZmienNick === 'TAK'){
             document.getElementById('WysNick').style.bottom = '50%'
+            document.getElementById('WysNickBack').style.bottom = '0%';
             setWysZmienNick('NIE');
         }else{
-            document.getElementById('WysNick').style.bottom = '-50%'
+            document.getElementById('WysNick').style.bottom = '-50%';
+            document.getElementById('WysNickBack').style.bottom = '-100%';
             setWysZmienNick('TAK'); 
         }
     }
@@ -72,15 +74,16 @@ export default function WysNick(props) {
     return(
         <>
             <div id='przerwa'></div>
+            <div id='WysNickBack'></div> 
             <div id='WysNick'>
                 <form>
                     <input id='WysNick' type='text' maxLength='16' placeholder='NICK' value={props.mojNick} onChange={(e) => {props.setMojNick(e.target.value)}}/><br/>
                     <button id='WysNick' onClick={wypisywanieNicku}>USTAW NICK</button>  
                 </form> 
+                
             </div>
             <h1 id='WysNick' onClick={zmienNick}>{wysNick}</h1>
             <span id='WysNick' >Naciśnij na nick, aby zmień</span>
-            
         </>
     )
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './Rozgrywka.css';
-import DisGracza from "./DisGracza";
-import './DisGracza.css';
+// import DisGracza from "./DisGracza";
+// import './DisGracza.css';
 
 export default function Rozgrywka(props) {
 
@@ -199,15 +199,39 @@ export default function Rozgrywka(props) {
 
 
 
+    // NOC
+    const czasWysNoc = 2000; //czas jak dlugo ma trwac noc 
+    const wysNoc = () => {
+
+        document.getElementById('noc').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('noc').style.opacity = '100%';
+
+
+            setTimeout(() => {
+                document.getElementById('noc').style.opacity = '0%';
+                setTimeout(() => {
+                    document.getElementById('noc').style.display = 'none';
+                }, 2000);
+
+                
+            }, czasWysNoc);
+        }, 2000);
+    }
+
+
+
+
+
     //usuwa gracza z glosowania
     const [jaZyje, setJaZyje] = useState('TAK');
     let starygracz1 = staryGracz;
     useEffect(() => {
         starygracz1 = staryGracz
     }, [staryGracz]);
+
     const [wyrzucony, setWyrzucony] = useState(''); 
     props.socket.off('wyrzuconoOdp').on('wyrzuconoOdp', (glosy1, gracze1, glosyGracze1) => {
-        
         //console.log(staryGracz);
         if(jaZyje === 'TAK'){
             document.getElementById('selectedGracz').id = starygracz1;
@@ -252,6 +276,8 @@ export default function Rozgrywka(props) {
                 }
                 
             },2000);
+
+            wysNoc();
         }, 1500)
 
         setWysPowtwierdzenie('NIE');
@@ -262,14 +288,30 @@ export default function Rozgrywka(props) {
 
 
 
+
+
+    //nikt nie zginal
+    props.socket.off('wyrzuconoNullOdp').on('wyrzuconoNullOdp', (gracze1, glosy1) => {
+        console.log('NIKT NIE ZGINAL');
+        wysNoc();
+        // setGracze([...gracze1]);
+        setGlosyGracze(glosy1);
+        if(jaZyje === 'TAK'){
+            document.getElementById('selectedGracz').id = staryGracz;
+        } 
+        setWysBlokada('NIE');
+        setWysPowtwierdzenie('NIE');
+        setPierwszyRaz('TAK');
+        setLiczbaGlosow(0);
+    });
+
+
+
     return(
         <>
             <h1>Rozgrywka</h1>
             
-            <div id='twojaKlasa'>
-                {twojaKlasa}
-                <div id='zgon'>✖</div>
-            </div>     
+              
             
 
             <div id='grupa'>
@@ -300,6 +342,18 @@ export default function Rozgrywka(props) {
                     <div id='wyrzuconyGracz'>{wyrzucony}</div>
                 </div>
             </div>
+
+
+            <div id='noc'>
+                NOC
+            </div>
+
+
+            <div id='twojaKlasa'>
+                {twojaKlasa}
+                <div id='zgon'>✖</div>
+            </div>   
+
 
             <div id='potwierdzenie'>
                 <div id='wybrany'>{selectedGraczNick}</div>

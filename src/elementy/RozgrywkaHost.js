@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import './Rozgrywka.css';
 import './Walec.css';
 import './css/wyrzuconyGracz.css';
+import './css/Noc.css';
 
-import DisGracza from "./DisGracza";
-import './DisGracza.css';
+// import DisGracza from "./DisGracza";
+// import './DisGracza.css';
 
 export default function RozgrywkaHost(props) {
 
@@ -22,7 +23,7 @@ export default function RozgrywkaHost(props) {
     //losowanie klas
     const losowanieKlass = () => {
         
-        let klasy = ['Ochroniarz', 'Policja', 'Debil', 'Haker'];
+        let klasy = ['Mafia1', 'Cywil1', 'Cywil2', 'Cywil3'];
 
         let iloscGraczy = gracze.length;
         // console.log(iloscGraczy);
@@ -242,7 +243,34 @@ export default function RozgrywkaHost(props) {
 
 
 
+
+
     
+    // NOC
+    const czasWysNoc = 2000; //czas jak dlugo ma trwac noc 
+    const wysNoc = () => {
+
+        document.getElementById('noc').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('noc').style.opacity = '100%';
+
+
+            setTimeout(() => {
+                document.getElementById('noc').style.opacity = '0%';
+                setTimeout(() => {
+                    document.getElementById('noc').style.display = 'none';
+                }, 2000);
+
+                
+            }, czasWysNoc);
+        }, 2000);
+    }
+    
+
+
+
+
+
 
     const [wyrzucony, setWyrzucony] = useState('');
     //sprawdzenie czy wszyscy gracze zaglosowali
@@ -311,10 +339,7 @@ export default function RozgrywkaHost(props) {
                     setTimeout(() => {
                         setWyrzucony('');
                         document.getElementById('wyrzuconyGracz').style.opacity = '0%';
-                        // document.getElementById('graczNr2').classList.add = 'graczNr';
-                        // setTimeout(() => {
-                        //     document.getElementById('graczNr1','graczNr2','graczNr3','graczNr4','graczNr5','graczNr6','graczNr7','graczNr8').classList.remove = 'graczNr';
-                        // }, 5000);
+                        
                     }, 50);
 
                     
@@ -324,7 +349,6 @@ export default function RozgrywkaHost(props) {
                         
                         
                         if(twojeID === glosy1.id){
-                            // document.getElementById('kolo').style.opacity = '50%';
                             document.getElementById('zgon').style.opacity = '100%';
                         }
                         else{
@@ -336,22 +360,42 @@ export default function RozgrywkaHost(props) {
                     },2000);
 
 
-                    
+                    wysNoc();
                 }, 1500)
 
                 //                             glosy1, room,       gracze,   GlosyGracze
                 props.socket.emit('wyrzucono', glosy1, props.room, wartosc, mojawartosc) 
             }
 
+
+            //reset głosów
+            let mojawartosc = glosyGracze; 
+            for(let x = 0; x < mojawartosc.length; x++){
+                mojawartosc[x].glosy = 0;
+            }
+
+            //remis z 2 os
             if(glosy1.glosy === glosy2.glosy){
                 console.log('liczba glosw jest rowna z graczem ' + glosy1.id + ' oraz ' + glosy2.id);
-                
+                wysNoc();
+                document.getElementById('selectedGracz').id = starygracz;
+
+                //                                room,       gracze,   GlosyGracze
+                props.socket.emit('wyrzuconoNull', props.room, gracze, mojawartosc) 
             }
 
+
+            //remis z 3 os i wiecej
             if(glosy1.glosy === glosy2.glosy && glosy2.glosy === glosy3.glosy){
                 console.log('pass glosowania');
+                wysNoc();
+                document.getElementById('selectedGracz').id = starygracz;
+
+                //                                room,       gracze,   GlosyGracze
+                props.socket.emit('wyrzuconoNull', props.room, gracze, mojawartosc) 
             }
 
+            setWysBlokada('NIE');
             setWysPowtwierdzenie('NIE');
             setPierwszyRaz('TAK');
             setLiczbaGlosow(0);
@@ -368,10 +412,7 @@ export default function RozgrywkaHost(props) {
         <>
             <h1>RozgrywkaHOST</h1>
             
-            <div id='twojaKlasa'>
-                {twojaKlasa}
-                <div id='zgon'>✖</div>
-            </div> 
+            
 
             <div id='grupa'>
                 <div id='koloBack'></div> 
@@ -404,6 +445,10 @@ export default function RozgrywkaHost(props) {
 
                   
             </div>
+
+            <div id='noc'>
+                NOC
+            </div>
             
 
             <div id='potwierdzenie'>
@@ -427,9 +472,7 @@ export default function RozgrywkaHost(props) {
             </div>
 
 
-            <div id='noc'>
-                NOC
-            </div>
+            
 
 
             <div id='walec'>
@@ -441,7 +484,10 @@ export default function RozgrywkaHost(props) {
                 <div id='walecSciana' style={{ '--x':6 }}><div id='walecImg'></div></div>
             </div>
 
-            
+            <div id='twojaKlasa'>
+                {twojaKlasa}
+                <div id='zgon'>✖</div>
+            </div> 
             
         </>
     )
