@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import './Rozgrywka.css';
-// import DisGracza from "./DisGracza";
-// import './DisGracza.css';
+import ListaKlas from "./ListaKlas";
 
 export default function Rozgrywka(props) {
 
@@ -17,9 +16,14 @@ export default function Rozgrywka(props) {
 
     //odbieranie klasy
     const [twojaKlasa, setTwojaKlasa] = useState('');
-    props.socket.on('twojaRolaOdp', (nazwaKlasy) => {
+    props.socket.on('twojaRolaOdp', (idGracza, nazwaKlasy) => {
         console.log(nazwaKlasy);
         setTwojaKlasa(nazwaKlasy);
+        for(let x = 0; x < gracze.length; x++){
+            if(gracze[x].id === idGracza){
+                gracze[x].klasa = nazwaKlasy;
+            }
+        }
     });
 
 
@@ -264,7 +268,6 @@ export default function Rozgrywka(props) {
 
 
                 if(twojeID === glosy1.id){
-                    // document.getElementById('kolo').style.opacity = '50%';
                     document.getElementById('zgon').style.opacity = '100%';
                     setJaZyje('NIE');
                 }
@@ -349,10 +352,20 @@ export default function Rozgrywka(props) {
             </div>
 
 
-            <div id='twojaKlasa'>
-                {twojaKlasa}
-                <div id='zgon'>✖</div>
-            </div>   
+            {/* <div id='twojaKlasa'>
+                <div id='twojaKlasa1'>
+                    {twojaKlasa}
+                    <div id='zgon'>✖</div>
+                </div>
+                
+                <div id='OpisKlasyBack'>
+                    <ListaKlas twojaKlasa={twojaKlasa}/>
+                </div>
+
+                <div id='twojaKlasaStrzalka'>
+                    \/
+                </div>
+            </div>    */}
 
 
             <div id='potwierdzenie'>
@@ -397,6 +410,11 @@ export default function Rozgrywka(props) {
                 <h1>Za moment zostaniewsz przeniesiony do lobby</h1>
             </div>
             {/* <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/> */}
+
+            <div id='twojaKlasa1'>
+                    {twojaKlasa}
+                    <div id='zgon'>✖</div>
+                </div>
             
         </>
     )

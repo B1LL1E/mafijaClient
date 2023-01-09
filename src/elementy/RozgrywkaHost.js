@@ -3,13 +3,27 @@ import './Rozgrywka.css';
 import './Walec.css';
 import './css/wyrzuconyGracz.css';
 import './css/Noc.css';
+import ListaKlas from "./ListaKlas";
 
 // import DisGracza from "./DisGracza";
 // import './DisGracza.css';
 
 export default function RozgrywkaHost(props) {
 
+
     const [gracze ,setGracze] = useState(props.gracze);
+    //dodawnia do obiektu pustej klasy
+    useEffect(() => {
+        let wartosc = gracze;
+        for(let x = 0; x < gracze.length; x++){
+            wartosc[x] = {id: wartosc[x].id, room: wartosc[x].room, nick: wartosc[x].nick, klasa: 'PUSTE' };
+            
+        }
+        console.log(wartosc);
+        setGracze(wartosc);
+    }, [])
+
+    
 
 
     //twoje ID
@@ -20,31 +34,76 @@ export default function RozgrywkaHost(props) {
     }, []);
 
 
+    const [iloMafia, setIloMafia] = useState(0);
+    const [iloCywil, setIloCywil] = useState(0);
+
+
     //losowanie klas
     const losowanieKlass = () => {
         
         let klasy = ['Mafia1', 'Cywil1', 'Cywil2', 'Cywil3'];
 
         let iloscGraczy = gracze.length;
-        // console.log(iloscGraczy);
         let iloscKlas = klasy.length;
         let nrKlasy = 0;
 
-        // console.log(klasy); 
-        nrKlasy = Math.floor(Math.random() * iloscKlas);
-        setTwojaKlasa(klasy[nrKlasy]);
-        klasy = klasy.filter((ele) => ele !== klasy[nrKlasy]);
-        // console.log(klasy);
+        let iloCywil1 = 0;
+        let iloMafia1 = 0;
 
+
+        // Dodanie mojej klasy
+        nrKlasy = Math.floor(Math.random() * iloscKlas);
+        let string1 = klasy[nrKlasy];
+        klasy = klasy.filter((ele) => ele !== klasy[nrKlasy]);
+        string1 = string1.substring(0, string1.length - 1);
+        setTwojaKlasa(string1);
+        gracze[0].klasa = string1;
+
+        if(string1 === 'Mafia'){   
+            iloMafia1 = iloMafia1 + 1;
+        }
+        if(string1 === 'Cywil'){
+            iloCywil1 = iloCywil1 + 1;
+        }
+
+
+        
         for(let i = 1; i < iloscGraczy; i++){
             iloscKlas = klasy.length;
             nrKlasy = Math.floor(Math.random() * iloscKlas);   
-            props.socket.emit('twojaRola', gracze[i].id, klasy[nrKlasy]);
+            string1 = klasy[nrKlasy];
             klasy = klasy.filter((ele) => ele !== klasy[nrKlasy]);
-            // console.log(klasy);
-        }    
+            string1 = string1.substring(0, string1.length - 1);
+
+
+
+            if(string1 === 'Mafia'){   
+                iloMafia1 = iloMafia1 + 1;
+            }
+            if(string1 === 'Cywil'){
+                iloCywil1 = iloCywil1 + 1;
+            }
+            
+
+            props.socket.emit('twojaRola', gracze[i].id, string1);
+            gracze[i].klasa = string1;
+        }   
+        setIloMafia(iloMafia1); 
+        setIloCywil(iloCywil1);
         
-    };
+    
+        console.log(iloMafia1);
+        console.log(iloCywil1);
+    }; 
+    
+
+    useEffect(() => {
+        console.log(iloMafia);
+        console.log(iloCywil);
+    }, [iloMafia, iloCywil])
+
+
+
 
     //rozpoczaencie losowania
     const [twojaKlasa, setTwojaKlasa] = useState('');
@@ -59,6 +118,8 @@ export default function RozgrywkaHost(props) {
 
     let nrGracza = 0;
     let nrGracza1= 0;
+
+
 
 
     //wybieranie gracza
@@ -225,13 +286,14 @@ export default function RozgrywkaHost(props) {
         if(wysBlokada === 'TAK'){
             document.getElementById('potwierdzenie').style.opacity = '0%';
             setTimeout(() => {
-                document.getElementById('potwierdzenie').style.display = 'none';
-            }, 100) 
+                console.log(document.getElementById('potwierdzenie').style.display);
+                document.getElementById('potwierdzenie').style.display = 'none'; 
+            }, 100);
 
             document.getElementById('blokada').style.display = 'block'; 
             setTimeout(() => {
-                document.getElementById('blokada').style.opacity = '50%';
-            }, 100)
+                    document.getElementById('blokada').style.opacity = '50%'; 
+            }, 100);
         }
         else{
             document.getElementById('blokada').style.opacity = '0%';
@@ -270,8 +332,8 @@ export default function RozgrywkaHost(props) {
 
 
 
-
-
+    const [zwyciesca, setZwyciesta] = useState('');
+    const [startGry, setStartGry] = useState('NIE');
     const [wyrzucony, setWyrzucony] = useState('');
     //sprawdzenie czy wszyscy gracze zaglosowali
     useEffect(() => {
@@ -293,10 +355,9 @@ export default function RozgrywkaHost(props) {
                     break;
                 }
             }
-            // console.log('najwicej glosow ma')
-            // console.log(glosy1);
-            // console.log(glosy2);
-            // console.log(glosy3);
+
+
+
 
 
             //wyrzucanie graczy
@@ -304,13 +365,38 @@ export default function RozgrywkaHost(props) {
                 // console.log('wyglosowano gracza ' + glosy1.id);
                 // console.log(glosyGracze);
 
-                //gracze
+
+
+                //gracze 
                 let wartosc = gracze;
                 for(let x = 0; x < wartosc.length; x++){
+                    setWysBlokada('TAK');
                     if(wartosc[x].id === glosy1.id){
                         console.log();
                         setWyrzucony(wartosc[x].nick);
                         document.getElementById('wyrzuconyGracz').style.opacity = '100%';
+                  
+                        
+                        //sprawdzanie czy host nie zostal wyglosowany
+                        //JA NIE ZYJE
+                        
+                        // if(wartosc[x].id === twojeID){  
+                        //     document.getElementById('zgon').style.opacity = '100%';
+                        //     document.getElementById('blokada1').style.opacity = '0%';
+                        //     document.getElementById('blokada').style.display = 'block';
+                        // }
+
+
+
+                        //odejmowanie ilosci klas
+                        if(wartosc[x].klasa === 'Mafia'){
+                            setIloMafia(iloMafia - 1);
+                        }
+                        if(wartosc[x].klasa === 'Cywil'){
+                            setIloCywil(iloCywil - 1);
+                        }
+                        console.log(wartosc[x].klasa);
+
                         wartosc.splice(x, 1);
                     }
                 }
@@ -332,6 +418,9 @@ export default function RozgrywkaHost(props) {
                 
 
 
+
+
+
                 // smierc, wlaniecie presą
                 setTimeout(() => {
                     document.getElementById('walec').style.top = '50%';
@@ -347,9 +436,18 @@ export default function RozgrywkaHost(props) {
                     setTimeout(() => {
                         document.getElementById('walec').style.top = '-50%';
                         
-                        
+
+
+
+                        //sprawdza czy umarlem
+                        //JA NIE ZYJE
                         if(twojeID === glosy1.id){
                             document.getElementById('zgon').style.opacity = '100%';
+                            document.getElementById('blokada').style.display = 'block'; 
+                            setTimeout(() => {
+                                document.getElementById('blokada').style.opacity = '50%';
+                            }, 100)
+                            
                         }
                         else{
                             setWysBlokada('NIE');
@@ -363,8 +461,14 @@ export default function RozgrywkaHost(props) {
                     wysNoc();
                 }, 1500)
 
+
+
+
+
                 //                             glosy1, room,       gracze,   GlosyGracze
                 props.socket.emit('wyrzucono', glosy1, props.room, wartosc, mojawartosc) 
+
+                
             }
 
 
@@ -399,9 +503,32 @@ export default function RozgrywkaHost(props) {
             setWysPowtwierdzenie('NIE');
             setPierwszyRaz('TAK');
             setLiczbaGlosow(0);
+
+            glosy1 = {id: 'puste', glosy: 0};
+            glosy2 = {id: 'puste', glosy: 0};
+            glosy3 = {id: 'puste', glosy: 0};
+
+
+
+            setStartGry('TAK');
         }
     }, [liczbaGlosow])
-    
+
+    //SPRAWDZANIE ZWYCIESCY
+    useEffect(() => {
+        if(startGry === 'TAK'){
+            console.log('MAFIA ' + iloMafia);
+            console.log('MIASTO ' + iloCywil);
+            if(iloCywil === iloMafia){
+                console.log('mafia wygrywa');
+                setZwyciesta('MAFIA');
+            }
+            if(iloMafia === 0){
+                console.log('Miasto Wygyrwa');
+                setZwyciesta('MIASTO');
+            }
+        }
+    }, [iloCywil, iloMafia, startGry]);
     
 
 
@@ -446,6 +573,13 @@ export default function RozgrywkaHost(props) {
                   
             </div>
 
+
+            <div id='twojaKlasa1'>
+                {twojaKlasa}<br />
+                <div id='zgon'>✖</div>
+                {zwyciesca}
+            </div>
+
             <div id='noc'>
                 NOC
             </div>
@@ -484,10 +618,24 @@ export default function RozgrywkaHost(props) {
                 <div id='walecSciana' style={{ '--x':6 }}><div id='walecImg'></div></div>
             </div>
 
-            <div id='twojaKlasa'>
-                {twojaKlasa}
-                <div id='zgon'>✖</div>
-            </div> 
+            {/* <div id='twojaKlasa'>
+                <div id='twojaKlasa1'>
+                    {twojaKlasa}
+                    <div id='zgon'>✖</div>
+                </div>
+                
+                <div id='OpisKlasyBack'>
+                    <ListaKlas twojaKlasa={twojaKlasa}/>
+                </div>
+
+                <div id='twojaKlasaStrzalka'>
+                    \/
+                </div>
+            </div>  */}
+
+                
+
+            
             
         </>
     )

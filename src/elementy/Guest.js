@@ -19,7 +19,23 @@ export default function Guest(props) {
         props.socket.emit('dolacz', props.room, mojNick);
     }, [])
     
+ 
     
+
+    const [liczbaGraczy, setLiczbaGraczy] = useState(0);
+    //sprawdza czy jest 4 graczy
+    useEffect(() => {
+        if(gracze.length < 4){
+            setLiczbaGraczy(props.gracze.length + ' / min. 4');
+        }
+        else{
+            //pojawia start
+            setLiczbaGraczy(props.gracze.length);
+        }
+        
+    }, [props.gracze]);
+
+
 
     //pobieranie listy graczy
     props.socket.on('listaOdp', (players) => {
@@ -70,6 +86,9 @@ export default function Guest(props) {
         }, 2000)
     })
 
+
+
+
     return(
         <>
             <h1>Guest</h1>
@@ -89,6 +108,11 @@ export default function Guest(props) {
 
                 
             </div>
+
+            <div id='liczbaGraczy'>
+                <div id='liczbaGraczy1'>Liczba graczy</div>
+                {liczbaGraczy}
+             </div>
 
             <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/>
         </>

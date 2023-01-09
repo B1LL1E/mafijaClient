@@ -1,14 +1,34 @@
+import './css/ListaKlas.css';
+
 export default function ListaKlas(props) {
 
-    if(props.twojaKlasa === 'Ochroniarz'){
+    if(props.twojaKlasa === 'Mafia'){
         return(
-            <h1>XD</h1>
+            <>
+                <div id='OpisKlasy'>
+                    Cel: Zabić pozostałych graczy
+                </div>
+            </>
+        )
+    }
+    
+    if(props.twojaKlasa === 'Cywil'){
+        return(
+            <>
+                <div id='OpisKlasy'>
+                    Cel: Wyglosować wszystkich morderców
+                </div>
+            </>
         )
     }
 
-    return(
-        <>
-            <h1>SIEMA</h1>
-        </>
-    )
+    if(props.twojaKlasa === ''){
+        return(
+            <>
+                <div id='OpisKlasy'>
+
+                </div>
+            </>
+        )
+    }
 }

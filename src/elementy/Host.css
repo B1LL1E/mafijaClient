@@ -6,14 +6,16 @@ div#kodLobby{
     font-size: 50px;
 }
 
-div#start{
+div#start, div#startFake{
     position: absolute;
     bottom: 4%;
     left: 4%;
+    font-size: 5vw;
+    background-color: #c2c2c2;
 }
 
-button#start{
-    font-size: 80px;
+div#start:active{
+    background-color: #888888;
 }
 
 
@@ -33,4 +35,22 @@ div#ListaGraczy{
 
 h1#mojNick{
     color: white;
+}
+
+
+
+
+/* liczba graczy */
+div#liczbaGraczy{
+    color: rgb(170, 1, 1);
+    font-size: 5vh;
+    font-weight: bold;
+
+    position: absolute;
+    top: 5%;
+    left: 5%;
+}
+
+div#liczbaGraczy1{
+    color: black;
 }

@@ -39,9 +39,11 @@ export default function Host(props) {
 
     //sprawdza i usuwa graczy
     props.socket.on('usun', (id) => {
-        let nowaLista = gracze.filter(gracz => gracz.id !== id.id);
-        setGracze(nowaLista);
+        if(gracze.length > 1){
+            let nowaLista = gracze.filter(gracz => gracz.id !== id.id);
+        setGracze(nowaLista);  
         props.setGracze(nowaLista);
+        }
     });
 
 
@@ -54,6 +56,46 @@ export default function Host(props) {
             props.setListOfPlayers(gracze);
         }, 2000);
     }
+
+
+    const [liczbaGraczy, setLiczbaGraczy] = useState(0);
+    //sprawdza czy jest 4 graczy
+    useEffect(() => {
+        if(gracze.length < 4){
+            //znika start
+            document.getElementById('startBut').style.display = 'none'
+            document.getElementById('startFake').style.display = 'block';
+            setLiczbaGraczy(gracze.length + ' / min. 4');
+            document.getElementById('liczbaGraczy').style.color = 'red';
+        }
+        else{
+            //pojawia start
+            document.getElementById('startBut').style.display = 'block';
+            document.getElementById('startFake').style.display = 'none';
+            setLiczbaGraczy(gracze.length);
+            document.getElementById('liczbaGraczy').style.color = 'black';
+        }
+        
+    }, [gracze]);
+
+
+
+    let lewoPrawo = 'lewo';
+    //przemieszcza fake guzik
+    const moveFakeStart = () => {
+        console.log('dziala');
+        if(lewoPrawo === 'lewo'){
+            document.getElementById('startFake').style.left = '20%';
+            // document.getElementById('startFake').style.right = '0%';
+            lewoPrawo = 'prawo';
+        }
+        else{
+            document.getElementById('startFake').style.left = '4%';
+            // document.getElementById('startFake').style.right = '0%';
+            lewoPrawo = 'lewo';
+        }
+    };
+
     
     return(
         <>
@@ -72,7 +114,20 @@ export default function Host(props) {
                 </div>
 
                 <div id='start'>
-                    <button id='start' onClick={startGame}>START</button>
+                    <div id='startBut' onClick={startGame}>
+                        START
+                    </div>
+
+                    
+                </div>
+
+                <div id='startFake' onMouseEnter={moveFakeStart}>
+                    START
+                </div>
+
+                <div id='liczbaGraczy'>
+                    <div id='liczbaGraczy1'>Liczba graczy</div>
+                    {liczbaGraczy}
                 </div>
             </div>
         </>

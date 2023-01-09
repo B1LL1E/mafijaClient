@@ -262,12 +262,28 @@ div#zgon{
 }
 
 div#twojaKlasa{
-    font-size: 10vh;
+    font-size: 2.5vh;
+    width: 20vw;
+
     position: absolute;
-    top: 10vh;
-    left: 20vw;
-    transform: translate(-50%,-40%);
+    right: 10vw;
+    top: -12vh;
+    transform: translate(0, 0%);
 
     opacity: 100%;
-    color: white;
+    color: white; 
+    border-radius: 0ex 0ex 3ex 3ex;
+    
+    transition: 0.1s;
+}
+div#twojaKlasa1{
+    font-weight: bold;
+    font-size: 5vh;
+}
+div#twojaKlasaStrzalka{
+    padding: 5%;
+}
+
+div#twojaKlasa:hover{
+    top: 0vh;
 }
