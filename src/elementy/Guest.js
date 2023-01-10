@@ -26,7 +26,7 @@ export default function Guest(props) {
     //sprawdza czy jest 4 graczy
     useEffect(() => {
         if(gracze.length < 4){
-            setLiczbaGraczy(props.gracze.length + ' / min. 4');
+            setLiczbaGraczy(props.gracze.length + ' / 8, min 4');
         }
         else{
             //pojawia start
@@ -89,6 +89,39 @@ export default function Guest(props) {
 
 
 
+    const [rozPok, setRozPok] = useState('xXxXxX');
+    //sprawdza czy dolaczono
+    props.socket.on('rozlaczOdp', (room) => {
+        props.socket.disconnect();
+        document.getElementById('rozloczono').style.display = 'block';
+        setRozPok(room);
+        setTimeout(() => {
+            window.location.reload();
+        }, 4000)
+    });
+
+
+
+
+
+    //sprawdza czy jest 4 graczy
+    useEffect(() => {
+        if(gracze.length < 4){
+            //znika start
+            setLiczbaGraczy(gracze.length + ' / 8, min 4');
+            document.getElementById('liczbaGraczy').style.color = 'red';
+        }
+        else{
+            //pojawia start
+            setLiczbaGraczy(gracze.length + ' / 8');
+            document.getElementById('liczbaGraczy').style.color = 'black';
+        }
+    }, [gracze]);
+
+
+
+
+
     return(
         <>
             <h1>Guest</h1>
@@ -112,9 +145,16 @@ export default function Guest(props) {
             <div id='liczbaGraczy'>
                 <div id='liczbaGraczy1'>Liczba graczy</div>
                 {liczbaGraczy}
-             </div>
+            </div>
 
             <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/>
+
+
+            <div id='rozloczono'>
+                <div id='rozloczono1'>
+                    Nie udało się połaczyc z <br/>{rozPok}
+                </div>
+            </div>
         </>
     )
 }

@@ -11,7 +11,7 @@ export default function Host(props) {
     }, [])
 
     const [gracze, setGracze] = useState([{id: props.socket.id ,room: props.room, nick: props.mojNick}]);
-    
+    const [liczbaGraczy, setLiczbaGraczy] = useState(0);
 
     //tworzy lobby
     useEffect(() => {
@@ -27,15 +27,24 @@ export default function Host(props) {
     
 
 
+
+
     //ustawia liste graczy
-    useEffect(() => {
-        props.socket.on('nowyGracz', (id , room ,nick) => {
+    // useEffect(() => {
+           
+    // }, [props.socket]);
+    props.socket.off('nowyGracz').on('nowyGracz', (id , room ,nick) => {
+        if(gracze.length < 8 ){
             setGracze((prevGracz) => [...prevGracz, {id: id, room: room, nick: nick}]);
             props.setGracze((prevGracz) => [...prevGracz, {id: id, room: room, nick: nick}]);
-        })    
+        }
+        else{
+            props.socket.emit('rozlacz', id, room, nick);
+        } 
+    }) 
 
-        
-    }, [props.socket]);
+
+
 
     //sprawdza i usuwa graczy
     props.socket.on('usun', (id) => {
@@ -55,27 +64,30 @@ export default function Host(props) {
             navigate("/RozgrywkaHost");
             props.setListOfPlayers(gracze);
         }, 2000);
+        document.getElementById('startBut').style.display = 'none';
     }
 
 
-    const [liczbaGraczy, setLiczbaGraczy] = useState(0);
+    
     //sprawdza czy jest 4 graczy
     useEffect(() => {
         if(gracze.length < 4){
             //znika start
             document.getElementById('startBut').style.display = 'none'
             document.getElementById('startFake').style.display = 'block';
-            setLiczbaGraczy(gracze.length + ' / min. 4');
+            setLiczbaGraczy(gracze.length + ' / 8, min 4');
             document.getElementById('liczbaGraczy').style.color = 'red';
         }
         else{
             //pojawia start
             document.getElementById('startBut').style.display = 'block';
             document.getElementById('startFake').style.display = 'none';
-            setLiczbaGraczy(gracze.length);
+            setLiczbaGraczy(gracze.length + ' / 8');
             document.getElementById('liczbaGraczy').style.color = 'black';
         }
-        
+
+
+        console.log(gracze.length);
     }, [gracze]);
 
 
