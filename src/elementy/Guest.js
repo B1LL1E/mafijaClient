@@ -10,6 +10,16 @@ export default function Guest(props) {
 
     //lista graczy
     const [gracze, setGracze] = useState([]);
+    const [twojeID, setTwojeID] = useState('');
+    let twojeID1 = '';
+    useEffect(() => {
+        console.log(props.socket.id);
+    }, []);
+
+    props.socket.on('connect', () => {
+        setTwojeID(props.socket.id);
+        twojeID1 = props.socket.id;
+    });
 
     //nick gracza
     const mojNick = props.mojNick;
@@ -60,7 +70,7 @@ export default function Guest(props) {
                 hostNICK = ele.nick;
             }
         })
-    }, [gracze]);
+    }, []);
   
     //sprawdza czy host jest aktywny
     const [usuGracz, setUsunGracz] = useState('');
@@ -77,7 +87,52 @@ export default function Guest(props) {
                 window.location.reload();
             }, 4000)
         }  
+        else{
+            setWysDisGracza('TAK');
+        }
+        setTimeout(() => {
+            setWysDisGracza('NIE');
+        }, 5000);
     });
+    useEffect(() => {
+        if(wysDisGracza === 'TAK'){
+            setTimeout(() => {
+                document.getElementById('DisGracza').style.opacity = '100%';
+            }, 200);
+            document.getElementById('DisGracza').style.display = 'block';
+        } 
+        else{
+            setTimeout(() => {
+                document.getElementById('DisGracza').style.display = 'none';
+            }, 200)
+            document.getElementById('DisGracza').style.opacity = '0%';
+        }
+        
+    }, [wysDisGracza])
+    // const [usuGracz, setUsunGracz] = useState('');
+    // let usuGraczID = '';
+    // const [wysDisGracza, setWysDisGracza] = useState('NIE');
+    // props.socket.on('usun', (gracz) => {
+    //     if(gracz !== undefined){
+    //         setUsunGracz(gracz.nick); 
+    //         usuGraczID = gracz.id;
+    //         // console.log(usuGraczID);
+    //         // console.log(hostID);
+    //         if(usuGraczID === hostID){
+    //             setWysDisGracza('TAK');
+    //             setTimeout(() => {
+    //                 window.location.reload();
+    //             }, 4000)
+    //             alert('tutaj');
+    //         }  
+    //         else{
+    //             setWysDisGracza('TAK');
+    //             setTimeout(() => {
+
+    //             }, 4000);
+    //         }
+    //     }  
+    // });
     
 
     props.socket.on('startGryOdp', () => {
@@ -91,13 +146,17 @@ export default function Guest(props) {
 
     const [rozPok, setRozPok] = useState('xXxXxX');
     //sprawdza czy dolaczono
-    props.socket.on('rozlaczOdp', (room) => {
+    props.socket.on('rozlaczOdp', (room, id1) => {
         props.socket.disconnect();
-        document.getElementById('rozloczono').style.display = 'block';
+        console.log('rozlaczODP ' + room + ' ' + id1);
         setRozPok(room);
+
+        document.getElementById('rozloczono').style.display = 'block'; 
         setTimeout(() => {
             window.location.reload();
-        }, 4000)
+        }, 5000);
+        console.log(id1);
+        console.log(twojeID1);
     });
 
 
@@ -152,7 +211,8 @@ export default function Guest(props) {
 
             <div id='rozloczono'>
                 <div id='rozloczono1'>
-                    Nie udało się połaczyc z <br/>{rozPok}
+                    Nie udało się połaczyc z <br/>{rozPok}<br/>
+                    Za chwile przeniesiemy cię spowrotem
                 </div>
             </div>
         </>

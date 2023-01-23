@@ -1,6 +1,8 @@
 import React ,{ useEffect, useState } from "react";
 import './Host.css'
 import { useNavigate } from "react-router-dom";
+import DisGracza from "./DisGracza";
+import './DisGracza.css';
 
 export default function Host(props) {
     const navigate = useNavigate();
@@ -34,7 +36,7 @@ export default function Host(props) {
            
     // }, [props.socket]);
     props.socket.off('nowyGracz').on('nowyGracz', (id , room ,nick) => {
-        if(gracze.length < 8 ){
+        if(gracze.length < 3 ){
             setGracze((prevGracz) => [...prevGracz, {id: id, room: room, nick: nick}]);
             props.setGracze((prevGracz) => [...prevGracz, {id: id, room: room, nick: nick}]);
         }
@@ -46,14 +48,28 @@ export default function Host(props) {
 
 
 
+
+    const [usuGracz, setUsunGracz] = useState('');
+    const [wysDisGracza, setWysDisGracza] = useState('NIE');
     //sprawdza i usuwa graczy
-    props.socket.on('usun', (id) => {
+    props.socket.on('usun', (gracz) => {
+        setUsunGracz(gracz.nick);
         if(gracze.length > 1){
-            let nowaLista = gracze.filter(gracz => gracz.id !== id.id);
+            let nowaLista = gracze.filter(gra => gra.id !== gracz.id);
         setGracze(nowaLista);  
         props.setGracze(nowaLista);
         }
+        else{
+            setUsunGracz(gracz.nick);
+            setWysDisGracza('TAK');
+            setTimeout(() => {
+                setWysDisGracza('NIE');
+            }, 4000);
+        }
     });
+
+
+
 
 
     //start
@@ -141,6 +157,8 @@ export default function Host(props) {
                     <div id='liczbaGraczy1'>Liczba graczy</div>
                     {liczbaGraczy}
                 </div>
+
+                <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/>
             </div>
         </>
     )

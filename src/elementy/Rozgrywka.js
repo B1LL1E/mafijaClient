@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import './Rozgrywka.css';
 import ListaKlas from "./ListaKlas";
+import DisGracza from "./DisGracza";
+import './DisGracza.css';
 
 export default function Rozgrywka(props) {
 
@@ -409,7 +411,7 @@ export default function Rozgrywka(props) {
                 <h1>HOST {props.usuGracz} się rozłaczył</h1>
                 <h1>Za moment zostaniewsz przeniesiony do lobby</h1>
             </div>
-            {/* <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/> */}
+            <DisGracza id='DisGracza' usuGracz={usuGracz} wysDisGracza={wysDisGracza}/>
 
             <div id='twojaKlasa1'>
                     {twojaKlasa}
